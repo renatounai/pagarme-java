@@ -2,6 +2,9 @@ package me.pagarme;
 
 import me.pagar.model.*;
 import me.pagar.util.JSONUtils;
+import me.pagar.util.JSONUtils;        
+import me.pagarme.factory.RecipientFactory;
+
 import com.google.gson.JsonObject;
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,12 +12,16 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
+
 
 public class TransactionTest extends BaseTest {
 
     private Recipient recipient = new Recipient();
     private SplitRule splitRule = new SplitRule();
     private BankAccount bankAccount;
+    private RecipientFactory recipientFactory = new RecipientFactory();
 
     private static Integer AMOUNT = 100;
     private static Integer PAID_AMOUNT_PARTIAL = 50;
@@ -339,31 +346,40 @@ public class TransactionTest extends BaseTest {
         Assert.assertEquals(transactionPhone.getNumber(), "55284132");
     }
 
-//    @Test
-//    public void testSplitTransaction() throws Throwable {
-//
-//        transaction = this.transactionCreditCardCommon();
-//        transaction.setCapture(true);
-//
-//        Collection<SplitRule> splitRules = new ArrayList<SplitRule>();
-//
-//        splitRule.setRecipientId(this.getRecipientId(false));
-//        splitRule.setPercentage(50);
-//        splitRule.setLiable(true);
-//        splitRule.setChargeProcessingFee(true);
-//
-//        splitRules.add(splitRule);
-//
-//        splitRule.setRecipientId(this.getRecipientId(true));
-//        splitRule.setPercentage(50);
-//        splitRule.setLiable(true);
-//        splitRule.setChargeProcessingFee(true);
-//
-//        splitRules.add(splitRule);
-//        transaction.setSplitRules(splitRules);
-//        transaction.save();
-//    }
-//
+    @Test
+    public void testSplitTransaction() throws Throwable {
+
+        transaction = this.transactionCreditCardCommon();
+        transaction.setCapture(true);
+        transaction.setAmount(10000);
+
+        Collection<SplitRule> splitRules = new ArrayList<SplitRule>();
+
+        Recipient recipient1 = recipientFactory.create();
+        recipient1.save();
+        splitRule.setRecipientId(recipient1.getId());
+        splitRule.setPercentage(50);
+        splitRule.setLiable(true);
+        splitRule.setChargeProcessingFee(true);
+        splitRules.add(splitRule);
+
+        Recipient recipient2  = recipientFactory.create();
+        recipient2.save();
+        splitRule.setRecipientId(recipient2.getId());
+        splitRule.setPercentage(50);
+        splitRule.setLiable(true);
+        splitRule.setChargeProcessingFee(true);
+
+        splitRules.add(splitRule);
+        transaction.setSplitRules(splitRules);
+        transaction.save();
+
+        Transaction foundTransaction = new Transaction().find(transaction.getId());
+        Collection<SplitRule> foundSplitRules = foundTransaction.getSplitRules();
+        Assert.assertEquals(splitRules.size(), foundSplitRules.size());
+
+    }
+
 //    private String getRecipientId(Boolean documentNumber) {
 //
 //        int bankAccountId = this.getBankAccountId(documentNumber);

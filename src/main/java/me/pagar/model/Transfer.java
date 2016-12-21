@@ -42,6 +42,8 @@ public class Transfer extends PagarMeModel<String> {
         super();
         this.recipientId = recipientId;
         this.amount = amount;
+        addUnsavedProperty("recipientId");
+        addUnsavedProperty("amount");
     }
 
     public Transfer(Integer amount, String recipientId, Integer bankAccountId){
@@ -49,6 +51,9 @@ public class Transfer extends PagarMeModel<String> {
         this.amount = amount;
         this.recipientId = recipientId;
         this.bankAccountId = bankAccountId;
+        addUnsavedProperty("recipientId");
+        addUnsavedProperty("amount");
+        addUnsavedProperty("bankAccountId");
     }
 
     public Type getType() {
@@ -85,14 +90,17 @@ public class Transfer extends PagarMeModel<String> {
 
     public void setBankAccount(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
+        addUnsavedProperty("bankAccount");
     }
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+        addUnsavedProperty("amount");
     }
 
     public void setBankAccountId(Integer bankAccountId) {
         this.bankAccountId = bankAccountId;
+        addUnsavedProperty("bankAccountId");
     }
 
     public Transfer save() throws PagarMeException{

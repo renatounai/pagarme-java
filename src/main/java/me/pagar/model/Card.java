@@ -107,7 +107,7 @@ public class Card extends PagarMeModel<String> {
 
     public void setHash(String hash) {
         this.hash = hash;
-        addUnsavedProperty("hash");
+        addUnsavedProperty("cardHash");
     }
 
     public void setHolderName(String holderName) {
@@ -117,7 +117,7 @@ public class Card extends PagarMeModel<String> {
 
     public void setNumber(String number) {
         this.number = number;
-        addUnsavedProperty("number");
+        addUnsavedProperty("cardNumber");
     }
 
     public void setCustomerId(Integer customerId) {
@@ -127,7 +127,7 @@ public class Card extends PagarMeModel<String> {
 
     public void setExpiresAt(String expiresAt) {
         this.expiresAt = expiresAt;
-        addUnsavedProperty("expiresAt");
+        addUnsavedProperty("cardExpirationDate");
     }
 
     public Card save() throws PagarMeException {

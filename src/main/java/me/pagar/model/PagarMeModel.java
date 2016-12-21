@@ -186,8 +186,9 @@ public abstract class PagarMeModel<PK extends Serializable> {
         final PagarMeRequest request = null == id ?
                 new PagarMeRequest(HttpMethod.POST, String.format("/%s", className)) :
                 new PagarMeRequest(HttpMethod.PUT, String.format("/%s/%s/", className, id));
-        request.setParameters(JSONUtils.objectToMap(this));
-
+        Map<String, Object> hashfiedObject = JSONUtils.objectToMap(this);
+        Map<String, Object> parameters = filterDirtyParametersOnly(hashfiedObject);
+        request.setParameters(parameters);
         final JsonElement element = request.execute();
         flush();
 
@@ -249,4 +250,14 @@ public abstract class PagarMeModel<PK extends Serializable> {
         }
     }
 
+    private Map<String, Object> filterDirtyParametersOnly(Map<String, Object> parameters){
+        Map<String, Object> newParameters = new HashMap<String, Object>();
+        for (String string : dirtyProperties) {
+            String snakeCasedString = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, string);
+            if(parameters.containsKey(snakeCasedString)){
+                newParameters.put(snakeCasedString, parameters.get(snakeCasedString));
+            }
+        }
+        return newParameters;
+    }
 }

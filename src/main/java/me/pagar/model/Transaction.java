@@ -180,7 +180,7 @@ public class Transaction extends PagarMeModel<Integer> {
 
     public void setCardTrack1(String cardTrack1) {
         this.cardTrack1 = cardTrack1;
-        addUnsavedProperty("cardTrack1");
+        addUnsavedProperty("cardTrack_1");
     }
 
     public String getCardTrack2() {
@@ -189,7 +189,7 @@ public class Transaction extends PagarMeModel<Integer> {
 
     public void setCardTrack2(String cardTrack2) {
         this.cardTrack2 = cardTrack2;
-        addUnsavedProperty("cardTrack2");
+        addUnsavedProperty("cardTrack_2");
     }
 
     public String getCardTrack3() {
@@ -198,7 +198,7 @@ public class Transaction extends PagarMeModel<Integer> {
 
     public void setCardTrack3(String cardTrack3) {
         this.cardTrack3 = cardTrack3;
-        addUnsavedProperty("cardTrack3");
+        addUnsavedProperty("cardTrack_3");
     }
 
     public String getCardPinMode() {

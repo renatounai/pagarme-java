@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import me.pagar.model.PagarMeException;
 import me.pagar.model.Recipient;
+import me.pagar.model.Recipient.TransferInterval;
 import me.pagarme.factory.BankAccountFactory;
 import me.pagarme.factory.RecipientFactory;
 
@@ -42,6 +43,20 @@ public class RecipientTest extends BaseTest{
 
         int recipientBankAccountId = recipient.getBankAccount().getId();
         Assert.assertEquals(recipientBankAccountId, bankAccountId);
+    }
+
+    @Test
+    public void updateRecipient() throws PagarMeException{
+        Recipient newRecipient = recipientFactory.create();
+        newRecipient.setTransferInterval(TransferInterval.WEEKLY);
+        newRecipient.save();
+        Assert.assertEquals(TransferInterval.WEEKLY, newRecipient.getTransferInterval());
+
+        newRecipient.setTransferInterval(TransferInterval.DAILY);
+        newRecipient.setTransferDay(0);
+        newRecipient.save();
+        Assert.assertEquals(TransferInterval.DAILY, newRecipient.getTransferInterval());
+        Assert.assertNull(newRecipient.getTransferDay());
     }
 
     @Test

@@ -30,7 +30,8 @@ public class BalanceOperation extends PagarMeModel<String> {
     private Integer fee;
 
     private Payable movementPayable;
-    private Transaction movementTransaction;
+    private Transfer movementTransfer;
+    private BulkAnticipation movementBulkAnticipation;
 
     public BalanceOperation() {
         setClassName(getClassName());
@@ -92,12 +93,20 @@ public class BalanceOperation extends PagarMeModel<String> {
         this.movementPayable = payable;
     }
 
-    public Transaction getMovementTransaction(){
-        return movementTransaction;
+    public Transfer getMovementTranfer(){
+        return movementTransfer;
     }
 
-    private void setMovementTransaction(Transaction transaction){
-        this.movementTransaction = transaction;
+    private void setMovementTransfer(Transfer transfer){
+        this.movementTransfer = transfer;
+    }
+
+    public BulkAnticipation getMovementBulkAnticipation(){
+        return movementBulkAnticipation;
+    }
+
+    private void setMovementBulkAnticipation(BulkAnticipation bulkAnticipation){
+        this.movementBulkAnticipation = bulkAnticipation;
     }
 
     public BalanceOperation find(String id) throws PagarMeException {
@@ -128,7 +137,7 @@ public class BalanceOperation extends PagarMeModel<String> {
         this.balanceOldAmount = other.balanceOldAmount;
         this.fee = other.fee;
         this.movementPayable = other.movementPayable;
-        this.movementTransaction = other.movementTransaction;
+        this.movementTransfer = other.movementTransfer;
         this.status = other.status;
         this.type = other.type;
     }
@@ -149,8 +158,8 @@ public class BalanceOperation extends PagarMeModel<String> {
         @SerializedName("payable")
         PAYABLE, 
 
-        @SerializedName("transaction")
-        TRANSACTION, 
+        @SerializedName("transfer")
+        TRANSFER, 
 
         @SerializedName("anticipation")
         ANTICIPATION;
@@ -169,9 +178,12 @@ public class BalanceOperation extends PagarMeModel<String> {
         if(responseType.equals(Type.PAYABLE)){
             Payable payable = JSONUtils.getAsObject(responseMovementObject, Payable.class);
             other.setMovementPayable(payable);
-        }else if(responseType.equals(Type.TRANSACTION)){
-            Transaction transaction = JSONUtils.getAsObject(responseMovementObject, Transaction.class);
-            other.setMovementTransaction(transaction);
+        }else if(responseType.equals(Type.TRANSFER)){
+            Transfer transfer = JSONUtils.getAsObject(responseMovementObject, Transfer.class);
+            other.setMovementTransfer(transfer);
+        }else if(responseType.equals(Type.ANTICIPATION)){
+            BulkAnticipation bulkAnticipation = JSONUtils.getAsObject(responseMovementObject, BulkAnticipation.class);
+            other.setMovementBulkAnticipation(bulkAnticipation);
         }
 
         return other;

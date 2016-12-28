@@ -1,22 +1,30 @@
 package me.pagarme;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import me.pagar.model.BalanceOperation;
+import me.pagar.model.BalanceOperation.Type;
+import me.pagar.model.BulkAnticipation;
 import me.pagar.model.PagarMeException;
-import me.pagar.model.Payable;
+import me.pagar.model.Recipient;
 import me.pagar.model.Transaction;
+import me.pagar.model.Transfer;
+import me.pagarme.factory.RecipientFactory;
 import me.pagarme.factory.TransactionFactory;
+import me.pagarme.helper.BalanceHelpers;
+import me.pagarme.helper.BulkAnticipationHelpers;
 import me.pagarme.helper.TestEndpoints;
 
 public class BalanceOperationsTest extends BaseTest {
 
     private TransactionFactory transactionFactory = new TransactionFactory();
     private TestEndpoints testEndpoints = new TestEndpoints();
+    private RecipientFactory recipientFactory = new RecipientFactory();
 
     @Before
     public void setUp() {
@@ -60,7 +68,31 @@ public class BalanceOperationsTest extends BaseTest {
         Assert.assertEquals(foundBalanceOperation.getStatus(), balanceOperation.getStatus());
         Assert.assertEquals(foundBalanceOperation.getType(), balanceOperation.getType());
         Assert.assertEquals(foundBalanceOperation.getMovementPayable().getId(), balanceOperation.getMovementPayable().getId());
-        Assert.assertNull(foundBalanceOperation.getMovementTransaction());
-        
+    }
+
+    @Test
+    public void testTransferBalanceOperation() throws PagarMeException{
+        Recipient newRecipient = recipientFactory.create();
+        newRecipient.save();
+
+        BalanceHelpers.addAvailableBalance(newRecipient, Integer.MAX_VALUE);
+        Transfer transfer = new Transfer(12345, newRecipient.getId());
+        transfer.save();
+
+        Collection<BalanceOperation> foundBalanceOperations = new BalanceOperation().findCollection(10, 1);
+        Assert.assertEquals(2, foundBalanceOperations.size());
+
+        Iterator<BalanceOperation> balanceOperationIterator = foundBalanceOperations.iterator();
+        BalanceOperation balanceOperation = balanceOperationIterator.next();
+        while(!balanceOperation.getType().equals(Type.TRANSFER)){
+            balanceOperation = balanceOperationIterator.next();
+        }
+        Assert.assertNotNull(balanceOperation.getId());
+        Assert.assertEquals(Type.TRANSFER, balanceOperation.getType());
+        Assert.assertEquals((Integer)(-12345), balanceOperation.getAmount());
+        Assert.assertNotNull(balanceOperation.getFee());
+        Assert.assertNotNull(balanceOperation.getBalanceAmount());
+        Assert.assertNotNull(balanceOperation.getStatus());
+        Assert.assertNotNull(balanceOperation.getMovementTranfer());
     }
 }

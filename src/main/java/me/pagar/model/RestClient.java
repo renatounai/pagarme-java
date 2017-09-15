@@ -3,6 +3,9 @@ package me.pagar.model;
 import com.google.common.base.Strings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
+import me.pagar.route.HttpRequester;
+import me.pagar.route.HttpResponse;
+import me.pagar.route.HttpResponseImpl;
 import me.pagar.util.JSONUtils;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -22,7 +25,7 @@ import java.security.cert.CertificateFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RestClient {
+public class RestClient implements HttpRequester {
 
     public final static String API_KEY = "api_key";
 
@@ -143,6 +146,92 @@ public class RestClient {
     }
 
     public PagarMeResponse execute() throws PagarMeException {
+        return doRequest(this.method, this.parameters);
+    }
+
+
+    @Override
+    public HttpResponse get(String url, String parameters, Map<String, String> headers) {
+        try {
+            PagarMeResponse response = doRequest("GET", parameters);
+            return new HttpResponseImpl(
+                    response.getBody().getAsString(),
+                    new HashMap<String, String>(),
+                    response.getCode()
+            );
+        }catch (PagarMeException e){
+            return new HttpResponseImpl(
+                    e.getErrors().toString(),
+                    new HashMap<String, String>(),
+                    e.getReturnCode()
+            );
+        }
+    }
+
+    @Override
+    public HttpResponse post(String url, String parameters, Map<String, String> headers) {
+        try {
+            PagarMeResponse response = doRequest("POST", parameters);
+            return new HttpResponseImpl(
+                    response.getBody().getAsString(),
+                    new HashMap<String, String>(),
+                    response.getCode()
+            );
+        }catch (PagarMeException e){
+            return new HttpResponseImpl(
+                    e.getErrors().toString(),
+                    new HashMap<String, String>(),
+                    e.getReturnCode()
+            );
+        }
+    }
+
+    @Override
+    public HttpResponse put(String url, String parameters, Map<String, String> headers) {
+        try {
+            PagarMeResponse response = doRequest("PUT", parameters);
+            return new HttpResponseImpl(
+                    response.getBody().getAsString(),
+                    new HashMap<String, String>(),
+                    response.getCode()
+            );
+        }catch (PagarMeException e){
+            return new HttpResponseImpl(
+                    e.getErrors().toString(),
+                    new HashMap<String, String>(),
+                    e.getReturnCode()
+            );
+        }
+    }
+
+    @Override
+    public HttpResponse delete(String url, String parameters, Map<String, String> headers) {
+        try {
+            PagarMeResponse response = doRequest("DELETE", parameters);
+            return new HttpResponseImpl(
+                    response.getBody().getAsString(),
+                    new HashMap<String, String>(),
+                    response.getCode()
+            );
+        }catch (PagarMeException e){
+            return new HttpResponseImpl(
+                    e.getErrors().toString(),
+                    new HashMap<String, String>(),
+                    e.getReturnCode()
+            );
+        }
+    }
+
+    private PagarMeResponse doRequest(String method, Map<String, Object> parameters) throws PagarMeException {
+        byte[] parametersJsonBytes = JSONUtils.getInterpreter().toJson(parameters).getBytes();
+        return doRequest(method, parametersJsonBytes);
+    }
+
+    private PagarMeResponse doRequest(String method, String parameters) throws PagarMeException {
+        return doRequest(method, parameters.getBytes());
+    }
+
+    private PagarMeResponse doRequest(String method, byte[] parameters) throws PagarMeException {
         final StringBuilder builder = new StringBuilder();
         int responseCode = -1;
 
@@ -153,15 +242,13 @@ public class RestClient {
                     method.equalsIgnoreCase(HttpMethod.DELETE)) {
                 httpClient.setDoOutput(true);
 
-                if (parameters.size() > 0) {
-                    final byte[] payload = JSONUtils.getInterpreter().toJson(parameters).getBytes();
-                    httpClient.addRequestProperty("Content-Type", "application/json");
-                    httpClient.addRequestProperty("Content-Length", String.valueOf(payload.length));
+                final byte[] payload = parameters;
+                httpClient.addRequestProperty("Content-Type", "application/json");
+                httpClient.addRequestProperty("Content-Length", String.valueOf(payload.length));
 
-                    final OutputStream os = httpClient.getOutputStream();
-                    os.write(payload);
-                    os.flush();
-                }
+                final OutputStream os = httpClient.getOutputStream();
+                os.write(payload);
+                os.flush();
 
             }
 
@@ -194,6 +281,5 @@ public class RestClient {
 
             throw PagarMeException.buildWithError(e);
         }
-
     }
 }

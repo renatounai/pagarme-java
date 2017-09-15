@@ -120,114 +120,6 @@ public class Transaction extends PagarMeModel<Integer> {
     @SerializedName("card_pin_kek")
     private String cardPinKek;
 
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-        addUnsavedProperty("cardNumber");
-    }
-
-    public String getCardHolderName() {
-        return cardHolderName;
-    }
-
-    public void setCardHolderName(String cardHolderName) {
-        this.cardHolderName = cardHolderName;
-        addUnsavedProperty("cardHolderName");
-    }
-
-    public String getCardExpirationDate() {
-        return cardExpirationDate;
-    }
-
-    public void setCardExpirationDate(String cardExpirationDate) {
-        this.cardExpirationDate = cardExpirationDate;
-        addUnsavedProperty("cardExpirationDate");
-    }
-
-    public String getCardCvv() {
-        return cardCvv;
-    }
-
-    public void setCardCvv(String cardCvv) {
-        this.cardCvv = cardCvv;
-        addUnsavedProperty("cardCvv");
-    }
-
-    public String getCardEmvData() {
-        return cardEmvData;
-    }
-
-    public void setCardEmvData(String cardEmvData) {
-        this.cardEmvData = cardEmvData;
-        addUnsavedProperty("cardEmvData");
-    }
-
-    public String getCardEmvResponse() {
-        return cardEmvResponse;
-    }
-
-    public void setCardEmvResponse(String cardEmvResponse) {
-        this.cardEmvResponse = cardEmvResponse;
-        addUnsavedProperty("cardEmvResponse");
-    }
-
-    public String getCardTrack1() {
-        return cardTrack2;
-    }
-
-    public void setCardTrack1(String cardTrack1) {
-        this.cardTrack1 = cardTrack1;
-        addUnsavedProperty("cardTrack1");
-    }
-
-    public String getCardTrack2() {
-        return cardTrack2;
-    }
-
-    public void setCardTrack2(String cardTrack2) {
-        this.cardTrack2 = cardTrack2;
-        addUnsavedProperty("cardTrack2");
-    }
-
-    public String getCardTrack3() {
-        return cardTrack3;
-    }
-
-    public void setCardTrack3(String cardTrack3) {
-        this.cardTrack3 = cardTrack3;
-        addUnsavedProperty("cardTrack3");
-    }
-
-    public String getCardPinMode() {
-        return cardPinMode;
-    }
-
-    public void setCardPinMode(String cardPinMode) {
-        this.cardPinMode = cardPinMode;
-        addUnsavedProperty("cardPinMode");
-    }
-
-    public String getCardPin() {
-        return cardPin;
-    }
-
-    public void setCardPin(String cardPin) {
-        this.cardPin = cardPin;
-        addUnsavedProperty("cardPin");
-    }
-
-    public String getCardPinKek() {
-        return cardPinKek;
-    }
-
-    public void setCardPinKek(String cardPinKek) {
-        this.cardPinKek = cardPinKek;
-        addUnsavedProperty("cardPinKek");
-    }
-
     /**
      * Custo da transação para o lojista
      */
@@ -422,6 +314,8 @@ public class Transaction extends PagarMeModel<Integer> {
     @SerializedName("split_rules")
     private Collection<SplitRule> splitRules;
 
+    private me.pagar.route.requestobject.Transaction requestObject;
+
     public Transaction() {
         super();
     }
@@ -449,6 +343,107 @@ public class Transaction extends PagarMeModel<Integer> {
         this.cardHash = cardHash;
         this.cardId = cardId;
         this.customer = customer;
+        this.requestObject = new me.pagar.route.requestobject.Transaction();
+    }
+
+    public String getCardNumber() {
+        return requestObject.getCardNumber();
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.requestObject.setCardNumber(cardNumber);
+    }
+
+    public String getCardHolderName() {
+        return requestObject.getCardHolderName();
+    }
+
+    public void setCardHolderName(String cardHolderName) {
+        this.requestObject.setCardHolderName(cardHolderName);
+    }
+
+    public String getCardExpirationDate() {
+        return this.requestObject.getCardExpirationDate();
+    }
+
+    public void setCardExpirationDate(String cardExpirationDate) {
+        this.requestObject.setCardExpirationDate(cardExpirationDate);
+    }
+
+    public String getCardCvv() {
+        return this.requestObject.getCardCvv();
+    }
+
+    public void setCardCvv(String cardCvv) {
+        this.requestObject.setCardCvv(cardCvv);
+    }
+
+    public String getCardEmvData() {
+        return this.requestObject.getCardEmvData();
+    }
+
+    public void setCardEmvData(String cardEmvData) {
+        this.requestObject.setCardEmvData(cardEmvData);
+    }
+
+    public String getCardEmvResponse() {
+        return this.requestObject.getCardEmvResponse();
+    }
+
+    @Deprecated
+    /**
+     * It's only used after the transaction is created, not to create the transaction
+     */
+    public void setCardEmvResponse(String cardEmvResponse) {
+        this.requestObject.setCardEmvResponse(cardEmvResponse);
+    }
+
+    public String getCardTrack1() {
+        return this.requestObject.getCardTrack1();
+    }
+
+    public void setCardTrack1(String cardTrack1) {
+        this.requestObject.setCardTrack1(cardTrack1);
+    }
+
+    public String getCardTrack2() {
+        return this.requestObject.getCardTrack2();
+    }
+
+    public void setCardTrack2(String cardTrack2) {
+        this.requestObject.setCardTrack2(cardTrack2);
+    }
+
+    public String getCardTrack3() {
+        return this.requestObject.getCardTrack3();
+    }
+
+    public void setCardTrack3(String cardTrack3) {
+        this.requestObject.setCardTrack3(cardTrack3);
+    }
+
+    public String getCardPinMode() {
+        return this.requestObject.getCardPinMode();
+    }
+
+    public void setCardPinMode(String cardPinMode) {
+        this.requestObject.getCardPinMode();
+    }
+
+    public String getCardPin() {
+        return this.requestObject.getCardPin();
+    }
+
+    public void setCardPin(String cardPin) {
+        this.requestObject.setCardPin(cardPin);
+    }
+
+    public String getCardPinKek() {
+        return this.requestObject.getCardPinKek();
+    }
+
+    public void setCardPinKek(String cardPinKek) {
+        this.requestObject.setCardPinKek(cardPinKek);
     }
 
     public Transaction find(String id) throws PagarMeException {

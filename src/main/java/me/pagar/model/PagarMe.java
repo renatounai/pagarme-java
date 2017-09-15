@@ -1,6 +1,7 @@
 package me.pagar.model;
 
 import com.google.common.base.Strings;
+import me.pagar.route.PagarMeAPiConfigurations;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -9,8 +10,10 @@ import java.util.Formatter;
 
 public abstract class PagarMe {
 
+    @Deprecated
     public static final String ENDPOINT = "https://api.pagar.me";
 
+    @Deprecated
     public static final String API_VERSION = "1";
 
     public static final String HMAC_MD5_ALGORITHM = "HmacMD5";
@@ -25,20 +28,22 @@ public abstract class PagarMe {
 
     public static final String ASCII = "ASCII";
 
+    @Deprecated
     private static String apiKey;
 
+    public static PagarMeAPiConfigurations configs = new PagarMeAPiConfigurations();
+
     public static String fullApiUrl(final String path) {
-        return ENDPOINT.concat("/")
-                .concat(API_VERSION)
+        return configs.baseUrl.concat("/")
                 .concat(path);
     }
 
     public static String getApiKey() {
-        return apiKey;
+        return configs.apiKey;
     }
 
     public static void init(String apiKey) {
-        PagarMe.apiKey = apiKey;
+        configs.apiKey = apiKey;
     }
 
     public static boolean validateRequestSignature(final String payload, final String signature) {

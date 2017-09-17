@@ -1,0 +1,16 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "SplitRule",
+  "properties": {
+    "object": "String",
+    "id": "String",
+    "liable": "Boolean",
+    "amount": "Integer",
+    "percentage": "Integer",
+    "recipient_id": "String",
+    "charge_remainder": "Boolean",
+    "charge_processing_fee": "Boolean",
+    "date_created": "String",
+    "date_updated": "String"
+  }
+}

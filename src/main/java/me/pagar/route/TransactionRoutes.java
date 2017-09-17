@@ -1,22 +1,19 @@
 package me.pagar.route;
 
-import me.pagar.model.PagarMeException;
+import lombok.AllArgsConstructor;
 import me.pagar.route.responseobject.Transaction;
 
+import java.io.IOException;
 import java.util.HashMap;
 
+@AllArgsConstructor
 public class TransactionRoutes {
 
     private HttpRequester httpRequester;
-    private PagarMeAPiConfigurations configurations;
+    private APiConfigurations configurations;
 
-    public TransactionRoutes(HttpRequester httpRequester, PagarMeAPiConfigurations configurations){
-        this.httpRequester = httpRequester;
-        this.configurations = configurations;
-    }
-
-    public Transaction create(CanBecomeKeyValueVariable parameters) throws PagarMeException{
-        String url = configurations.baseUrl.concat(PagarMeEndpointsFormats.TRANSACTION_CREATE);
+    public Transaction create(CanBecomeKeyValueVariable parameters) throws ApiErrors, IOException {
+        String url = configurations.baseUrl.concat("/transactions");
         String jsonString = parameters.toJson();
         HashMap<String, String> headers = new HashMap<String, String>();
         HttpResponse apiResponse = httpRequester.post(url, jsonString, headers);
@@ -29,7 +26,7 @@ public class TransactionRoutes {
             Transaction newTransaction = new Transaction(jsonResponse);
             return newTransaction;
         } else {
-            throw new PagarMeException(statusCode, url, "POST", apiResponseBody);
+            throw new ApiErrors(statusCode, url, "POST", apiResponseBody);
         }
     }
 }

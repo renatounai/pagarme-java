@@ -1,0 +1,9 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "AnticipationLimit",
+  "properties": {
+    "amount": "Integer",
+    "anticipation_fee": "Integer",
+    "fee": "Integer"
+  }
+}

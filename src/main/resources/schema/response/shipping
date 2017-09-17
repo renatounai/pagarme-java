@@ -1,0 +1,13 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Shipping",
+  "properties": {
+    "address": "Address",
+    "object": "String",
+    "id": "String",
+    "name": "String",
+    "fee": "Integer",
+    "delivery_date": "String",
+    "expedited": "Boolean"
+  }
+}

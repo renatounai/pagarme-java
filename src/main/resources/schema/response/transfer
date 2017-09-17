@@ -1,0 +1,22 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Transfer",
+  "properties": {
+    "object": "String",
+    "id": "String",
+    "amount": "Integer",
+    "type": "String",
+    "status": "String",
+    "source_type": "String",
+    "source_id": "String",
+    "target_type": "String",
+    "target_id": "String",
+    "fee": "Integer",
+    "funding_date": "String",
+    "funding_estimated_date": "String",
+    "transaction_id": "String",
+    "date_created": "String",
+    "bank_account": "BankAccount",
+    "metadata": "Map<String, Object>"
+  }
+}

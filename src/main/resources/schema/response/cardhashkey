@@ -1,0 +1,10 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "CardHashKey",
+  "properties": {
+    "date_created": "String",
+    "id": "String",
+    "ip": "String",
+    "public_key": "String"
+  }
+}

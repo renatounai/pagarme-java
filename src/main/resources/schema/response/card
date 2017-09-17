@@ -1,0 +1,18 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Card",
+  "properties": {
+    "object": "String",
+    "id": "String",
+    "date_created": "String",
+    "date_updated": "String",
+    "brand": "String",
+    "holder_name": "String",
+    "first_digits": "String",
+    "last_digits": "String",
+    "country": "String",
+    "fingerprint": "String",
+    "valid": "Boolean",
+    "expiration_date": "String"
+  }
+}

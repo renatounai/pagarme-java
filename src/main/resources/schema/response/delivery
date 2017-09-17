@@ -1,0 +1,16 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Delivery",
+  "properties": {
+    "date_created": "String",
+    "date_updated": "String",
+    "id": "String",
+    "object": "String",
+    "response_body": "String",
+    "response_headers": "String",
+    "response_time": "Integer",
+    "status": "String",
+    "status_code": "String",
+    "status_reason": "String"
+  }
+}

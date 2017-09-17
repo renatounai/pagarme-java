@@ -1,0 +1,17 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "BulkAnticipation",
+  "properties": {
+    "amount": "Integer",
+    "anticipation_fee": "Integer",
+    "date_created": "String",
+    "date_updated": "String",
+    "fee": "Integer",
+    "id": "String",
+    "object": "String",
+    "payment_date": "String",
+    "status": "String",
+    "timeframe": "String",
+    "type": "String"
+  }
+}

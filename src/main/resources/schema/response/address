@@ -1,0 +1,16 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Address",
+  "properties": {
+    "object": "String",
+    "street": "String",
+    "complementary": "String",
+    "street_number": "String",
+    "neighborhood": "String",
+    "city": "String",
+    "state": "String",
+    "zipcode": "String",
+    "country": "String",
+    "id": "String"
+  }
+}

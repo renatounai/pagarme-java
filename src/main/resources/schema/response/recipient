@@ -1,0 +1,17 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Recipient",
+  "properties": {
+    "object": "String",
+    "id": "String",
+    "transfer_enabled": "Boolean",
+    "last_transfer": "String",
+    "transfer_interval": "Integer",
+    "transfer_day": "Integer",
+    "automatic_anticipation_enabled": "Boolean",
+    "anticipatable_volume_percentage": "Integer",
+    "date_created": "String",
+    "date_updated": "String",
+    "bank_account": "BankAccount"
+  }
+}

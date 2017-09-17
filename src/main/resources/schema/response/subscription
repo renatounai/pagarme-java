@@ -1,0 +1,26 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Plan",
+  "properties": {
+    "object": "String",
+    "plan": "Plan",
+    "id": "String",
+    "current_transaction": "Transaction",
+    "postback_url": "String",
+    "payment_method": "String",
+    "card_brand": "String",
+    "card_last_digits": "String",
+    "current_period_start": "String",
+    "current_period_end": "String",
+    "charges": "Integer",
+    "status": "String",
+    "date_created": "String",
+    "date_updated": "String",
+    "phone": "Phone",
+    "address": "Address",
+    "customer": "Customer",
+    "card": "Card",
+    "metadata": "Map<String, Object>",
+    "settled_charges": "Integer"
+  }
+}

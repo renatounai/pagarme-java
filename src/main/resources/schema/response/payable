@@ -1,0 +1,23 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Payable",
+  "properties": {
+    "object": "String",
+    "id": "String",
+    "status": "String",
+    "amount": "Integer",
+    "fee": "Integer",
+    "anticipation_fee": "Integer",
+    "installment": "Integer",
+    "transaction_id": "String",
+    "split_rule_id": "String",
+    "bulk_anticipation_id": "String",
+    "recipient_id": "String",
+    "payment_date": "String",
+    "original_payment_date": "String",
+    "type": "String",
+    "payment_method": "String",
+    "accrual_date": "String",
+    "date_created": "String"
+  }
+}

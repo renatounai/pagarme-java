@@ -1,0 +1,23 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "GatewayOperation",
+  "properties": {
+    "id": "String",
+    "date_created": "String",
+    "date_updated": "String",
+    "status": "String",
+    "fail_reason": "String",
+    "type": "String",
+    "rollbacked": "Boolean",
+    "model": "String",
+    "model_id": "String",
+    "group_id": "String",
+    "next_group_id": "String",
+    "request_id": "String",
+    "started_at": "String",
+    "ended_at": "String",
+    "processor": "String",
+    "processor_response_code": "String",
+    "metadata": "Map<String ,Object>"
+  }
+}

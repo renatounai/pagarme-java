@@ -1,0 +1,18 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Plan",
+  "properties": {
+    "object": "String",
+    "id": "String",
+    "amount": "Integer",
+    "days": "Integer",
+    "name": "String",
+    "trial_days": "Integer",
+    "date_created": "String",
+    "payment_methods": "List<String>",
+    "color": "String",
+    "charges": "Integer",
+    "installments": "Integer",
+    "invoice_reminder": "Integer"
+  }
+}

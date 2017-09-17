@@ -1,0 +1,19 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "BankAccount",
+  "properties": {
+    "object": "String",
+    "id": "String",
+    "bank_code": "String",
+    "agencia": "String",
+    "agencia_dv": "String",
+    "conta": "String",
+    "conta_dv": "String",
+    "type": "String",
+    "document_type": "String",
+    "document_number": "String",
+    "legal_name": "String",
+    "charge_transfer_fees": "Boolean",
+    "date_created": "String"
+  }
+}

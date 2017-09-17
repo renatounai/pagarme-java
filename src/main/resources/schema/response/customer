@@ -1,0 +1,23 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Customer",
+  "properties": {
+    "object": "String",
+    "id": "String",
+    "external_id": "String",
+    "type": "String",
+    "country": "String",
+    "document_number": "String",
+    "document_type": "String",
+    "name": "String",
+    "email": "String",
+    "phone_numbers": "List<String>",
+    "born_at": "String",
+    "birthday": "String",
+    "gender": "String",
+    "date_created": "String",
+    "documents": "List<Document>",
+    "addresses": "List<Address>",
+    "phones": "List<Phone>"
+  }
+}

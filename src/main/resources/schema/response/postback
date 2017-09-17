@@ -1,0 +1,20 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Postback",
+  "properties": {
+    "date_created": "String",
+    "date_updated": "String",
+    "deliveries": "List<Delivery>",
+    "headers": "String",
+    "id": "String",
+    "model": "String",
+    "model_id": "String",
+    "next_retry": "String",
+    "object": "String",
+    "payload": "String",
+    "request_url": "String",
+    "retries": "Integer",
+    "signature": "String",
+    "status": "String"
+  }
+}

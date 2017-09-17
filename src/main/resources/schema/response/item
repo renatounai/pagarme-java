@@ -1,0 +1,15 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Item",
+  "properties": {
+    "object": "String",
+    "id": "String",
+    "title": "String",
+    "unit_price": "Integer",
+    "quantity": "Integer",
+    "category": "String",
+    "tangible": "Boolean",
+    "venue": "String",
+    "date": "String"
+  }
+}

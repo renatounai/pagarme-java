@@ -1,0 +1,10 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Balance",
+  "properties": {
+    "object": "String",
+    "waiting_funds": "BalanceInternal",
+    "available": "BalanceInternal",
+    "transferred": "BalanceInternal"
+  }
+}

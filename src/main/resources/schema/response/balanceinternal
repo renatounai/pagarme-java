@@ -1,0 +1,7 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Balance",
+  "properties": {
+    "amount": "Integer"
+  }
+}

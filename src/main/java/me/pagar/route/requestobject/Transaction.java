@@ -1,12 +1,10 @@
 package me.pagar.route.requestobject;
 
-import me.pagar.model.Customer;
-import me.pagar.model.SplitRule;
 import me.pagar.route.FieldsOnHash;
-import org.joda.time.LocalDate;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Transaction extends FieldsOnHash {
@@ -23,211 +21,96 @@ public class Transaction extends FieldsOnHash {
         super(jsonString);
     }
 
-    public Boolean getAsync() {
-        return super.getParameterAsBoolean("async");
-    }
-
-    public void setAsync(Boolean async) {
-        super.setParameter("async", async);
-    }
-
-    public Boolean getCapture() {
-        return super.getParameterAsBoolean("capture");
-    }
-
-    public void setCapture(Boolean capture) {
-        super.setParameter("capture", capture);
-    }
-
-    public Integer getAmount() {
+    public Integer amount() {
         return super.getParameterAsInteger("amount");
     }
 
-    public void setAmount(Integer amount) {
+    public Transaction amount(Integer amount) {
         super.setParameter("amount", amount);
+        return this;
     }
 
-    public Integer getInstallments() {
-        return super.getParameterAsInteger("installments");
-    }
-
-    public void setInstallments(Integer installments) {
-        super.setParameter("installments", installments);
-    }
-
-    public String getCardId() {
-        return super.getParameterAsString("card_id");
-    }
-
-    public void setCardId(String cardId) {
-        super.setParameter("card_id", cardId);
-    }
-
-    public String getCardNumber() {
+    public String cardNumber() {
         return super.getParameterAsString("card_number");
     }
 
-    public void setCardNumber(String cardNumber) {
+    public Transaction cardNumber(String cardNumber) {
         super.setParameter("card_number", cardNumber);
+        return this;
     }
 
-    public String getCardHolderName() {
-        return super.getParameterAsString("card_holder_name");
-    }
-
-    public void setCardHolderName(String cardHolderName) {
-        super.setParameter("card_holder_name", cardHolderName);
-    }
-
-    public String getCardExpirationDate() {
-        return super.getParameterAsString("card_expiration_date");
-    }
-
-    public void setCardExpirationDate(String cardExpirationDate) {
-        super.setParameter("card_expiration_date", cardExpirationDate);
-    }
-
-    public String getCardCvv() {
+    public String cardCvv() {
         return super.getParameterAsString("card_cvv");
     }
 
-    public void setCardCvv(String cardCvv) {
+    public Transaction cardCvv(String cardCvv) {
         super.setParameter("card_cvv", cardCvv);
+        return this;
     }
 
-    public String getCardEmvData() {
-        return super.getParameterAsString("card_emv_data");
+    public String cardExpirationDate() {
+        return super.getParameterAsString("card_expiration_date");
     }
 
-    public void setCardEmvData(String cardEmvData) {
-        super.setParameter("card_emv_data", cardEmvData);
+    public Transaction cardExpirationDate(String cardExpirationDate) {
+        super.setParameter("card_expiration_date", cardExpirationDate);
+        return this;
     }
 
-    public String getCardEmvResponse() {
-        return super.getParameterAsString("cardEmvResponse");
+    public String cardHolderName() {
+        return super.getParameterAsString("card_holder_name");
     }
 
-    public void setCardEmvResponse(String cardEmvResponse) {
-        super.setParameter("card_emv_response", cardEmvResponse);
+    public Transaction cardHolderName(String cardHolderName) {
+        super.setParameter("card_holder_name", cardHolderName);
+        return this;
     }
 
-    public String getCardPinMode() {
-        return super.getParameterAsString("cardPinMode");
+    public Customer customer() {
+        try {
+            return super.getParameterCasted("customer", new Customer());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    public void setCardPinMode(String cardPinMode) {
-        super.setParameter("card_pin_mode", cardPinMode);
-    }
-
-    public String getCardTrack1() {
-        return super.getParameterAsString("cardTrack1");
-    }
-
-    public void setCardTrack1(String cardTrack1) {
-        super.setParameter("card_track_1", cardTrack1);
-    }
-
-    public String getCardTrack2() {
-        return super.getParameterAsString("card_track_2");
-    }
-
-    public void setCardTrack2(String cardTrack2) {
-        super.setParameter("card_track_2", cardTrack2);
-    }
-
-    public String getCardTrack3() {
-        return super.getParameterAsString("card_track_3");
-    }
-
-    public void setCardTrack3(String cardTrack3) {
-        super.setParameter("card_track_3", cardTrack3);
-    }
-
-    public String getCardPin() {
-        return super.getParameterAsString("cardPin");
-    }
-
-    public void setCardPin(String cardPin) {
-        super.setParameter("card_pin", cardPin);
-    }
-
-    public String getCardPinKek() {
-        return super.getParameterAsString("card_pin_kek");
-    }
-
-    public void setCardPinKek(String cardPinKek) {
-        super.setParameter("card_pin_kek", cardPinKek);
-    }
-
-    public String getSoftDescriptor() {
-        return super.getParameterAsString("soft_descriptor");
-    }
-
-    public void setSoftDescriptor(String softDescriptor) {
-        super.setParameter("soft_descriptor", softDescriptor);
-    }
-
-    public String getPostbackUrl() {
-        return super.getParameterAsString("postback_url");
-    }
-
-    public void setPostbackUrl(String postbackUrl) {
-        super.setParameter("postback_url", postbackUrl);
-    }
-
-    public String getCardHash() {
-        return super.getParameterAsString("card_hash");
-    }
-
-    public void setCardHash(String cardHash) {
-        super.setParameter("card_hash", cardHash);
-    }
-
-    public me.pagar.model.Transaction.CaptureMethod getCaptureMethod() {
-        return super.getParameterCasted("payment_method", me.pagar.model.Transaction.CaptureMethod.class);
-    }
-
-    public void setCaptureMethod(me.pagar.model.Transaction.CaptureMethod captureMethod) {
-        super.setParameter("capture_method", captureMethod);
-    }
-
-    public me.pagar.model.Transaction.Status getBoletoExpiration() {
-        return super.getParameterAsString("boleto_expiration_date");
-    } 
-
-    public me.pagar.model.Transaction.Status setBoletoExpiration(LocalDate boletoExpiration) {
-        super.setParameter("boleto_expiration_date", boletoExpiration);
-    } 
-
-    public Customer getCustomer() {
-        return super.getParameterAsString("customer");
-    } 
-
-    public Customer setCustomer(Customer customer) {
+    public Transaction customer(Customer customer) {
         super.setParameter("customer", customer);
-    } 
+        return this;
+    }
 
-    public Map<String, Object> getMetadata() {
-        return super.getParameterAsString("metadata");
-    } 
+    public Billing billing() {
+        try {
+            return super.getParameterCasted("billing", new Billing());
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-    public Map<String, Object> setMetadata(Map<String, Object> metadata) {
-        super.setParameter("metadata", metadata);
-    } 
+    public Transaction billing(Billing billing) {
+        super.setParameter("billing", billing);
+        return this;
+    }
 
-    public Object getAntifraudMetadata() {
-        return super.getParameterAsString("antifraud_metadata");
-    } 
+    public Shipping shipping() {
+        try {
+            return super.getParameterCasted("shipping", new Shipping());
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-    public Object setAntifraudMetadata(Object antifraudMetadata) {
-        super.setParameter("antifraud_metadata", antifraudMetadata);
-    } 
+    public Transaction shipping(Shipping shipping) {
+        super.setParameter("shipping", shipping);
+        return this;
+    }
 
-    public Collection<SplitRule> getSplitRules() {
-        return super.getParameterAsString("split_rules");
-    } 
+    public List<Item> items() {
+        return super.<Item>getParameterAsList("items");
+    }
 
-    public Object setAntifraudMetadata(Collection<SplitRule> splitRules) {
-        super.setParameter("split_rules", splitRules);
-    } 
+    public Transaction items(List<Item> items) {
+        super.setParameter("items", items);
+        return this;
+    }
 }

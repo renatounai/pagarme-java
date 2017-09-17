@@ -1,0 +1,16 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Refund",
+  "properties": {
+    "object": "String",
+    "id": "String",
+    "amount": "Integer",
+    "type": "String",
+    "status": "String",
+    "charge_fee_recipient_id": "String",
+    "bank_account_id": "String",
+    "transaction_id": "String",
+    "date_created": "String",
+    "metadata": "Map<String, Object>"
+  }
+}

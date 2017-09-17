@@ -1,0 +1,10 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Document",
+  "properties": {
+    "object": "String",
+    "id": "String",
+    "type": "String",
+    "number": "String"
+  }
+}

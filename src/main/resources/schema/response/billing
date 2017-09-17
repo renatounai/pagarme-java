@@ -1,0 +1,10 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Billing",
+  "properties": {
+    "address": "Address",
+    "object": "String",
+    "id": "String",
+    "name": "String"
+  }
+}

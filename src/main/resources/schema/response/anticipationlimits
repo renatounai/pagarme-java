@@ -1,0 +1,8 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "AnticipationLimits",
+  "properties": {
+    "maximum": "AnticipationLimit",
+    "minimum": "AnticipationLimit"
+  }
+}

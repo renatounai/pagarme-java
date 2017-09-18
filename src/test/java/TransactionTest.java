@@ -68,7 +68,7 @@ public class TransactionTest {
 
         try {
             me.pagar.route.responseobject.Transaction txResponse = client.transactions().create(txRequest);
-            System.out.print(txResponse.toJson());
+            System.out.print(txResponse);
         } catch (ApiErrors e) {
             System.out.print(e.getBody());
         }

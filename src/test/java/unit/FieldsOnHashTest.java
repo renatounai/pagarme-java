@@ -88,18 +88,18 @@ public class FieldsOnHashTest {
     public void testStringListValueError() {
         List<String> value = testSubject.getParameterAsStringList("notStringList");
     }
-
-    @Test
-    public void testObjectListValue() {
-        List<FieldsOnHash> value = testSubject.getParameterAsObjectList("objectList");
-        Assert.assertEquals(list, value);
-    }
-
-    @Test
-    public void testObjectListValueError() {
-        List<FieldsOnHash> value = testSubject.getParameterAsObjectList("notObjectList");
-        Assert.assertNull(value);
-    }
+//
+//    @Test
+//    public void testObjectListValue() {
+//        List<FieldsOnHash> value = testSubject.getParameterAsObjectList("objectList");
+//        Assert.assertEquals(list, value);
+//    }
+//
+//    @Test
+//    public void testObjectListValueError() {
+//        List<FieldsOnHash> value = testSubject.getParameterAsObjectList("notObjectList");
+//        Assert.assertNull(value);
+//    }
 
     @Test
     public void testCastedValueValue() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
@@ -108,4 +108,65 @@ public class FieldsOnHashTest {
         Assert.assertEquals(valueMap, value.fields());
     }
 
+    @Test
+    public void fieldSerialization() {
+        Map<String, Object> childMap = new HashMap<>();
+        childMap.put("string", "string");
+
+        List<String> childStringlist = new ArrayList<>();
+        childStringlist.add("string");
+
+        List<Integer> childIntegerlist = new ArrayList<>();
+        childIntegerlist.add(123);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("integer", 123);
+        map.put("string", "string");
+        map.put("boolean", true);
+        map.put("null", null);
+        map.put("map", childMap);
+        map.put("stringList", childStringlist);
+        map.put("integerList", childIntegerlist);
+
+
+        FieldsOnHash testSubject = new FieldsOnHashImpl(map);
+        String jsonString = testSubject.toJson().replace(" ", "");
+        Assert.assertTrue(jsonString.contains("\"integer\":123"));
+        Assert.assertTrue(jsonString.contains("\"string\":\"string\""));
+        Assert.assertTrue(jsonString.contains("\"boolean\":true"));
+        Assert.assertTrue(jsonString.contains("\"null\":null"));
+        Assert.assertTrue(jsonString.contains("\"map\":{\"string\":\"string\"}"));
+        Assert.assertTrue(jsonString.contains("\"stringList\":[\"string\"]"));
+        Assert.assertTrue(jsonString.contains("\"integerList\":[123]"));
+
+    }
+
+    @Test
+    public void testLoadJsonString() {
+        String jsonString = "{" +
+            "\"integer\":123," +
+            "\"string\":\"string\"," +
+            "\"boolean\":true," +
+            "\"null\":null," +
+            "\"map\":{\"string\":\"string\"}," +
+            "\"stringList\":[\"string\"]," +
+            "\"integerList\":[123]" +
+        "}";
+        FieldsOnHash testSubject = new FieldsOnHashImpl(jsonString);
+        Map<String, Object> fields = testSubject.fields();
+
+        Assert.assertTrue(
+    fields.get("integer").equals(123) ||
+            fields.get("integer").equals(123.0)
+        );
+        Assert.assertEquals("string", fields.get("string"));
+        Assert.assertNull(fields.get("null"));
+        Assert.assertEquals("string", ((Map<String, Object>)fields.get("map")).get("string"));
+        Assert.assertArrayEquals(Arrays.asList("string").toArray(), ((List<String>)fields.get("stringList")).toArray());
+        Assert.assertTrue(
+    Arrays.asList(123).equals((List<String>)fields.get("integerList")) ||
+            Arrays.asList(123.0).equals((List<String>)fields.get("integerList"))
+        );
+
+    }
 }

@@ -1,3 +1,5 @@
+package codegeneration;
+
 import com.google.common.base.CaseFormat;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -20,7 +22,7 @@ public class CreatePojos {
         List<String> boxedClassesNames = Arrays.asList("Integer", "Boolean", "String");
 
 
-        new Wrapper().forEachSchema((fileString) -> {
+        new codegeneration.Wrapper().forEachSchema((fileString) -> {
 
             JsonObject json = new Gson().fromJson(fileString, JsonObject.class);
             String newClassName = json.get("_class_").getAsString();
@@ -112,7 +114,7 @@ public class CreatePojos {
 
                 OutputStream fos = null;
                 try {
-                    File file = new File("./generated/" + packageName);
+                    File file = new File("./src/main/java" + packageName);
                     file.getParentFile().mkdirs();
                     javaFile.writeTo(file);
                 } catch (Exception e) {

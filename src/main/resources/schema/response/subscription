@@ -1,6 +1,6 @@
 {
   "_package_": "me.pagar.responseobject",
-  "_class_": "Plan",
+  "_class_": "Subscription",
   "properties": {
     "object": "String",
     "plan": "Plan",

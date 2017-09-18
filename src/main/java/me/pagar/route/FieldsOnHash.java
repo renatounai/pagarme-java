@@ -73,21 +73,21 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
         }
     }
 
-//    public <T extends FieldsOnHash> List<T> getParameterAsObjectList(@NonNull String parameterName, Class<T> objectClass) throws ClassCastException {
-//        List<Map<String, Object>> parameterValue = (List<Map<String, Object>>)getParameterReference(parameterName);
-//        List<T> instanciatedObjects = new ArrayList<>();
-//        try {
-//            for(Map<String, Object> map : parameterValue) {
-//                T objectInstance = objectClass.newInstance();
-//                objectInstance.loadParametersFrom(map);
-//                instanciatedObjects.add(objectInstance);
-//            }
-//        } catch (InstantiationException | IllegalAccessException e) {
-//            // Eu aganrantio :+1:
-//            e.printStackTrace();
-//        }
-//        return instanciatedObjects;
-//    }
+    public <T extends FieldsOnHash> List<T> getParameterAsObjectList(@NonNull String parameterName, Class<T> objectClass) throws ClassCastException {
+        List<Map<String, Object>> parameterValue = (List<Map<String, Object>>)getParameterReference(parameterName);
+        List<T> instanciatedObjects = new ArrayList<>();
+        try {
+            for(Map<String, Object> map : parameterValue) {
+                T objectInstance = objectClass.newInstance();
+                objectInstance.loadParametersFrom(map);
+                instanciatedObjects.add(objectInstance);
+            }
+        } catch (InstantiationException | IllegalAccessException e) {
+            // Eu aganrantio :+1:
+            e.printStackTrace();
+        }
+        return instanciatedObjects;
+    }
 
     @NonNull
     public <T extends CanLoadFieldsFromSources> T getParameterCasted(String parameterName, T classInstance) {

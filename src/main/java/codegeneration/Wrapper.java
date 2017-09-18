@@ -16,7 +16,7 @@ public class Wrapper {
                 "payable","recipient","splitrule","transfer","anticipationlimit",
                 "balanceinternal","bulkanticipation","customer","gatewayoperation",
                 "plan","refund","subscription","anticipationlimits","bankaccount",
-                "card","delivery","item","postback","shipping","transactions").forEach((resource) -> {
+                "card","delivery","item","postback","shipping","transactions","phone").forEach((resource) -> {
             ClassLoader classLoader = getClass().getClassLoader();
             Enumeration<URL> responseSchemaUrls = null;
             try {

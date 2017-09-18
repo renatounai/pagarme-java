@@ -13,7 +13,7 @@ public class TransactionRoutes {
     private APiConfigurations configurations;
 
     public Transaction create(CanBecomeKeyValueVariable parameters) throws ApiErrors, IOException {
-        String url = configurations.baseUrl.concat("/transactions");
+        String url = configurations.baseUrl.concat("/schema/response/transactions");
         String jsonString = parameters.toJson();
         HashMap<String, String> headers = new HashMap<String, String>();
         HttpResponse apiResponse = httpRequester.post(url, jsonString, headers);

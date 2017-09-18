@@ -344,11 +344,11 @@ public class Transaction extends FieldsOnHash {
     }
 
     public String address() {
-        return super.getParameterAsString("address");
+        return super.getParameterAsString("schema/response/address");
     }
 
     public Transaction address(String address) {
-        super.setParameter("address", address);
+        super.setParameter("schema/response/address", address);
         return this;
     }
 

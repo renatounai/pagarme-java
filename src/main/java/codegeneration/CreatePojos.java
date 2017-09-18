@@ -15,6 +15,7 @@ public class CreatePojos {
 
     public static void main(String[] args) throws IOException {
 
+        ClassName hashMapClassName = ClassName.get("java.util", "HashMap");
         ClassName mapClassName = ClassName.get("java.util", "Map");
         ClassName listClassName = ClassName.get("java.util", "List");
         ClassName stringClassName = ClassName.get("java.lang", "String");
@@ -30,8 +31,25 @@ public class CreatePojos {
 
             ClassName referencedClassName = ClassName.get(packageName, newClassName);
             TypeSpec.Builder classBuilder = TypeSpec.classBuilder(newClassName)
-                    .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                    .superclass(FieldsOnHash.class);
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .superclass(FieldsOnHash.class)
+                .addMethod(MethodSpec.constructorBuilder()
+                    .addModifiers(Modifier.PUBLIC)
+                    .addStatement("super(new $T())", ParameterizedTypeName.get(hashMapClassName, stringClassName, ClassName.OBJECT))
+                    .build()
+                )
+                .addMethod(MethodSpec.constructorBuilder()
+                    .addParameter(ParameterizedTypeName.get(mapClassName, stringClassName, ClassName.OBJECT), "parameters")
+                    .addModifiers(Modifier.PUBLIC)
+                    .addStatement("super(parameters)")
+                    .build()
+                )
+                .addMethod(MethodSpec.constructorBuilder()
+                    .addParameter(stringClassName, "jsonString")
+                    .addModifiers(Modifier.PUBLIC)
+                    .addStatement("super(jsonString)")
+                    .build()
+                );
 
 
             json.get("properties").getAsJsonObject().entrySet().forEach(((entry) -> {
@@ -39,12 +57,13 @@ public class CreatePojos {
                 TypeName propertyName = null;
                 String entryValue = entry.getValue().getAsString();
 
-
+                String superClassMethodName = "getParameterAsString";
                 if(entryValue.contains("List")){
                     String pojoName = entryValue.replace("List<", "").replace(">", "");
                     if(!boxedClassesNames.contains(pojoName)){
                         ClassName pojoClassName = ClassName.get(packageName, pojoName);
                         propertyName = ParameterizedTypeName.get(listClassName, pojoClassName);
+                        superClassMethodName = "getParameterAsObjectList";
                     }
                 }
 
@@ -56,52 +75,57 @@ public class CreatePojos {
 
                         case "Boolean":
                             propertyName = ClassName.get("java.lang", "Boolean");
+                            superClassMethodName = "getParameterAsBoolean";
                             break;
 
                         case "Integer":
                             propertyName = ClassName.get("java.lang", "Integer");
+                            superClassMethodName = "getParameterAsInteger";
                             break;
 
                         case "Map<String,Object>":
                             propertyName = ParameterizedTypeName.get(mapClassName, stringClassName, ClassName.OBJECT);
+                            superClassMethodName = "getParameterAsMap";
                             break;
 
                         case "List<String>":
                             propertyName = ParameterizedTypeName.get(listClassName, stringClassName);
-                            break;
-
-                        case "List<Integer>":
-                            propertyName = ParameterizedTypeName.get(listClassName, intergerClassName);
+                            superClassMethodName = "getParameterAsStringList";
                             break;
 
                         default:
                             propertyName = ClassName.get(packageName, entry.getValue().getAsString());
+                            superClassMethodName = "getParameterCasted";
                             break;
                     }
                 }
 
-                if(propertyName == null){
-                    System.out.print(propertyName);
-                }
 
-                MethodSpec getMethod = MethodSpec.methodBuilder(
-                        CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, entry.getKey()))
-                        .addModifiers(Modifier.PUBLIC)
-                        .returns(propertyName)
-                        .addParameter(String.class, "parameterName")
-                        .addStatement("super.getParameterAsString(parameterName)")
-                        .build();
+
+
+                MethodSpec.Builder getMethodBuilder = MethodSpec.methodBuilder(
+                    CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, entry.getKey()))
+                    .addModifiers(Modifier.PUBLIC)
+                    .returns(propertyName);
+                if(superClassMethodName.equals("getParameterCasted")){
+                    getMethodBuilder.addStatement("return super.getParameterCasted(\"" + entry.getKey() + "\", new $T())", propertyName);
+                } else if(superClassMethodName.equals("getParameterAsObjectList")) {
+                    getMethodBuilder.addStatement("return super.getParameterAsObjectList(\"" + entry.getKey() + "\", $T.class)", ((ParameterizedTypeName)propertyName).typeArguments.get(0));
+                }else {
+                    getMethodBuilder.addStatement("return super." + superClassMethodName + "(\"" + entry.getKey() + "\")");
+                }
+                MethodSpec getMethod = getMethodBuilder.build();
 
                 if(packageName.contains("requestobject")){
                     MethodSpec setMethod = MethodSpec.methodBuilder(
-                            CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, entry.getKey()))
-                            .addModifiers(Modifier.PUBLIC)
-                            .returns(referencedClassName)
-                            .addParameter(String.class, "parameterName")
-                            .addParameter(propertyName, "parameterValue")
-                            .addStatement("super.setParameter(parameterValue)")
-                            .addStatement("return this")
-                            .build();
+                        CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, entry.getKey()))
+                        .addModifiers(Modifier.PUBLIC)
+                        .returns(referencedClassName)
+                        .addParameter(String.class, "parameterName")
+                        .addParameter(propertyName, "parameterValue")
+                        .addStatement("super.setParameter(parameterValue)")
+                        .addStatement("return this")
+                        .build();
                     classBuilder.addMethod(setMethod);
                 }
 
@@ -109,13 +133,13 @@ public class CreatePojos {
                 classBuilder.addMethod(getMethod);
 
                 JavaFile javaFile = JavaFile.builder(packageName, classBuilder.build())
-                        .indent("    ")
-                        .build();
+                    .indent("    ")
+                    .build();
 
                 OutputStream fos = null;
                 try {
-                    File file = new File("./src/main/java" + packageName);
-                    file.getParentFile().mkdirs();
+                    File file = new File("target/generated-sources/");
+//                    file.getParentFile().mkdirs();
                     javaFile.writeTo(file);
                 } catch (Exception e) {
                     e.printStackTrace();

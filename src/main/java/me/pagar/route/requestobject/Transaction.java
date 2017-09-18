@@ -2,7 +2,6 @@ package me.pagar.route.requestobject;
 
 import me.pagar.route.FieldsOnHash;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,40 +67,40 @@ public class Transaction extends FieldsOnHash {
 
     public Customer customer() {
         try {
-            return super.getParameterCasted("customer", new Customer());
+            return super.getParameterCasted("schema/response/customer", new Customer());
         } catch (Exception e) {
             return null;
         }
     }
 
     public Transaction customer(Customer customer) {
-        super.setParameter("customer", customer);
+        super.setParameter("schema/response/customer", customer);
         return this;
     }
 
     public Billing billing() {
         try {
-            return super.getParameterCasted("billing", new Billing());
+            return super.getParameterCasted("schema/response/billing", new Billing());
         } catch (Exception e) {
             return null;
         }
     }
 
     public Transaction billing(Billing billing) {
-        super.setParameter("billing", billing);
+        super.setParameter("schema/response/billing", billing);
         return this;
     }
 
     public Shipping shipping() {
         try {
-            return super.getParameterCasted("shipping", new Shipping());
+            return super.getParameterCasted("schema/response/shipping", new Shipping());
         } catch (Exception e) {
             return null;
         }
     }
 
     public Transaction shipping(Shipping shipping) {
-        super.setParameter("shipping", shipping);
+        super.setParameter("schema/response/shipping", shipping);
         return this;
     }
 

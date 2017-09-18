@@ -1,0 +1,11 @@
+{
+  "_package_": "me.pagar.requestobject",
+  "_class_": "Transfer",
+  "properties": {
+    "amount": "Integer",
+    "type": "String",
+    "bank_account_id": "String",
+    "metadata": "Map<String, Object>",
+    "recipient_id": "String"
+  }
+}

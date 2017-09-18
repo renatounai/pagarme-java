@@ -1,0 +1,14 @@
+{
+  "_package_": "me.pagar.requestobject",
+  "_class_": "Address",
+  "properties": {
+    "street": "String",
+    "street_number": "String",
+    "neighborhood": "String",
+    "city": "String",
+    "state": "String",
+    "zipcode": "String",
+    "country": "String",
+    "complementary": "String"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_package_": "me.pagar.requestobject",
+  "_class_": "Recipient",
+  "properties": {
+    "transfer_enabled": "Boolean",
+    "last_transfer": "String",
+    "transfer_interval": "Integer",
+    "transfer_day": "Integer",
+    "automatic_anticipation_enabled": "Boolean",
+    "anticipatable_volume_percentage": "Integer",
+    "bank_account": "BankAccount",
+    "bank_account_id": "String"
+  }
+}

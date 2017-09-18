@@ -1,0 +1,11 @@
+{
+  "_package_": "me.pagar.requestobject",
+  "_class_": "BulkAnticipation",
+  "properties": {
+    "recipient_id": "String",
+    "payment_date": "String",
+    "timeframe": "String",
+    "requested_amount": "Integer",
+    "build": "Boolean"
+  }
+}

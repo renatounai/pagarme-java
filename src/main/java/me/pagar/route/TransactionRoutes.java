@@ -6,11 +6,15 @@ import me.pagar.route.responseobject.Transaction;
 import java.io.IOException;
 import java.util.HashMap;
 
-@AllArgsConstructor
 public class TransactionRoutes {
 
     private HttpRequester httpRequester;
     private APiConfigurations configurations;
+
+    public TransactionRoutes(HttpRequester requester, APiConfigurations configurations) {
+        this.httpRequester = requester;
+        this.configurations = configurations;
+    }
 
     public Transaction create(CanBecomeKeyValueVariable parameters) throws ApiErrors, IOException {
         String url = configurations.baseUrl.concat("/schema/response/transactions");

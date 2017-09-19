@@ -2,25 +2,20 @@ package me.pagar.route;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import lombok.NonNull;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecomeKeyValueVariable {
 
     //String => (number | string | Map)
-    private HashMap<String, Object> fields = new HashMap<>();
+    private Map<String, Object> fields = new HashMap<>();
 
-    public FieldsOnHash(@NonNull String jsonString){
+    public FieldsOnHash(String jsonString){
         loadParametersFrom(jsonString);
     }
 
-    public FieldsOnHash(@NonNull Map<String, Object> parameters){
+    public FieldsOnHash(Map<String, Object> parameters){
         loadParametersFrom(parameters);
     }
 
@@ -28,124 +23,106 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
         return this.fields;
     }
 
-    public Integer getParameterAsInteger(@NonNull String parameterName) throws NumberFormatException{
-        Object parameter = getParameterReference(parameterName);
-        if(parameter != null) {
-            Integer parameterAsInteger = Integer.valueOf(parameter.toString());
-            return parameterAsInteger;
-        } else {
-            throw new NumberFormatException();
-        }
-
+    public Integer getParameterAsInteger(String parameterName, Integer defaultValue) {
+        Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
+        Integer parameterAsInteger = Integer.valueOf(String.valueOf(parameter));
+        return parameterAsInteger;
     }
 
-    public String getParameterAsString(@NonNull String parameterName) throws ClassCastException{
-        Object parameter = getParameterReference(parameterName);
+    public String getParameterAsString(String parameterName, String defaultValue) {
+        Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
         if(parameter == null){
             return "null";
         } else {
-            String parameterAsString = parameter.toString();
+            String parameterAsString = String.valueOf(parameter);
             return parameterAsString;
         }
     }
 
-    public Boolean getParameterAsBoolean(@NonNull String parameterName) throws ClassCastException{
-        Object parameter = getParameterReference(parameterName);
-        if(parameter != null) {
-            Boolean parameterAsBoolean = Boolean.valueOf(parameter.toString());
-            return parameterAsBoolean;
-        } else {
-            throw new ClassCastException();
-        }
+    public Boolean getParameterAsBoolean(String parameterName, Boolean defaultValue) {
+        Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
+        Boolean parameterAsBoolean = Boolean.valueOf(String.valueOf(parameter));
+        return parameterAsBoolean;
     }
 
-    public <T extends FieldsOnHash> List<T> getParameterAsList(@NonNull String parameterName) throws ClassCastException {
-        Object parameter = getParameterReference(parameterName);
+    public <T extends FieldsOnHash> List<T> getParameterAsList(String parameterName, List<T> defaultValue) {
+        Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
         return (List<T>) parameter;
     }
 
-    public List<String> getParameterAsStringList(@NonNull String parameterName) throws ClassCastException {
-        Object parameter = getParameterReference(parameterName);
-        if(parameter != null) {
-            return (List<String>) parameter;
-        } else {
-            throw new ClassCastException();
-        }
+    public List<String> getParameterAsStringList(String parameterName, List<String> defaultValue) {
+        Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
+        return (List<String>) parameter;
     }
 
-    public <T extends FieldsOnHash> List<T> getParameterAsObjectList(@NonNull String parameterName, Class<T> objectClass) throws ClassCastException {
-        List<Map<String, Object>> parameterValue = (List<Map<String, Object>>)getParameterReference(parameterName);
-        List<T> instanciatedObjects = new ArrayList<>();
-        try {
+    public <T extends FieldsOnHash> List<T> getParameterAsObjectList(String parameterName, Class<T> objectClass, List<T> defaultValue) {
+        List<Map<String, Object>> parameterValue = (List<Map<String, Object>>) getParameterReferenceOrDefault(parameterName, defaultValue);
+        try{
+            List<T> instanciatedObjects = new ArrayList<>();
             for(Map<String, Object> map : parameterValue) {
                 T objectInstance = objectClass.newInstance();
                 objectInstance.loadParametersFrom(map);
                 instanciatedObjects.add(objectInstance);
             }
-        } catch (InstantiationException | IllegalAccessException e) {
-            // Eu aganrantio :+1:
-            e.printStackTrace();
+            return instanciatedObjects;
+        } catch (Exception e) {
+            return defaultValue;
         }
-        return instanciatedObjects;
     }
 
-    @NonNull
-    public <T extends CanLoadFieldsFromSources> T getParameterCasted(String parameterName, T classInstance) {
-        Map<String, Object> clasInstanceParameters = getParameterAsMap(parameterName);
-        classInstance.loadParametersFrom(clasInstanceParameters);
-        return classInstance;
-    }
-
-    @NonNull
-    public Map<String, Object> getParameterAsMap(String parameterName) throws ClassCastException {
-        Object parameterValue = this.getParameterReference(parameterName);
-        if(parameterValue != null) {
-            return (Map<String, Object>)parameterValue;
+    public <T extends CanLoadFieldsFromSources> T getParameterCasted(String parameterName, T classInstance, T defaultValue) {
+        Map<String, Object> clasInstanceParameters = getParameterAsMap(parameterName, null);
+        if(clasInstanceParameters == null) {
+            return defaultValue;
         } else {
-            throw new ClassCastException();
+            classInstance.loadParametersFrom(clasInstanceParameters);
+            return classInstance;
         }
     }
 
-    public void setParameter(@NonNull String parameterName, String parameterValue){
+    public Map<String, Object> getParameterAsMap(String parameterName, Map<String, Object> defaultValue) {
+        Object parameterValue = this.getParameterReferenceOrDefault(parameterName, defaultValue);
+        return (Map<String, Object>)parameterValue;
+    }
+
+    public void setParameter(String parameterName, String parameterValue){
         this.fields.put(parameterName, parameterValue);
     }
 
-    public void setParameter(@NonNull String parameterName, Integer parameterValue){
+    public void setParameter(String parameterName, Integer parameterValue){
         this.fields.put(parameterName, parameterValue);
     }
 
-    public void setParameter(@NonNull String parameterName, Map<String, Object> parameterValue){
+    public void setParameter(String parameterName, Map<String, Object> parameterValue){
         this.fields.put(parameterName, parameterValue);
     }
 
-    public void setParameter(@NonNull String parameterName, Boolean parameterValue){
+    public void setParameter(String parameterName, Boolean parameterValue){
         this.fields.put(parameterName, parameterValue);
     }
 
-    public void setParameter(@NonNull String parameterName, FieldsOnHash child){
+    public void setParameter(String parameterName, FieldsOnHash child){
         this.fields.put(parameterName, child.fields());
     }
 
-    public <T extends FieldsOnHash> void setParameter(@NonNull String parameterName, Collection<T> list) {
+    public <T extends FieldsOnHash> void setParameter(String parameterName, Collection<T> list) {
         List<Map<String, Object>> mappedObjects = list.stream()
                 .map((item) -> item.fields())
                 .collect(Collectors.toList());
         this.fields.put(parameterName, mappedObjects);
     }
 
-    public void setParameterCollection(@NonNull String parameterName, Collection<String> collection) {
+    public void setParameterCollection(String parameterName, Collection<String> collection) {
         this.fields.put(parameterName, collection);
     }
 
     @Override
-    @NonNull
     public void loadParametersFrom(Map<String, Object> parameters) {
-        fields.putAll(parameters);
+        this.fields = parameters;
     }
 
     //TODO - parametrize Gson
     @Override
-    @NonNull
     public void loadParametersFrom(String jsonString) {
         Map<String, Object> hashedJson = new Gson().fromJson(jsonString, HashMap.class);
         loadParametersFrom(hashedJson);
@@ -191,10 +168,16 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
 //        }
 //    }
 
-    @NonNull
-    protected Object getParameterReference(String parameterName) {
-        Object parameterValue = this.fields.get(parameterName);
-        return parameterValue;
+    protected Object getParameterReferenceOrDefault(String parameterName, Object defaultValue) {
+        if(this.fields.containsKey(parameterName)) {
+            Object parameterValue = this.fields.get(parameterName);
+            return parameterValue;
+        } else {
+            return defaultValue;
+        }
     }
 
+    public boolean equals(FieldsOnHash other) {
+        return this.fields.equals(other.fields);
+    }
 }

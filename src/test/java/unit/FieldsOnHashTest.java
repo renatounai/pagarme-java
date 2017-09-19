@@ -10,19 +10,6 @@ import java.util.*;
 
 public class FieldsOnHashTest {
 
-    public class FieldsOnHashImpl extends FieldsOnHash {
-
-        public FieldsOnHashImpl(){
-            super(new HashMap<String, Object>());
-        }
-        public FieldsOnHashImpl(Map<String, Object> parameters){
-            super(parameters);
-        }
-        public FieldsOnHashImpl(String jsonString){
-            super(jsonString);
-        }
-    }
-
     public FieldsOnHashImpl testSubject;
     public List<FieldsOnHash> list = Arrays.asList(new FieldsOnHashImpl(), new FieldsOnHashImpl());
     public List<String> stringList = Arrays.asList("1", "2");
@@ -45,14 +32,19 @@ public class FieldsOnHashTest {
     }
 
     @Test
-    public void testIntegerValues() {
+    public void testIntegerValues() throws NoSuchFieldException {
         Integer value = testSubject.getParameterAsInteger("integer");
         Assert.assertEquals(Integer.valueOf(123), value);
     }
 
-    @Test(expected = NumberFormatException.class)
-    public void testIntegerValuesError() {
+    @Test(expected = NoSuchFieldException.class)
+    public void testIntegerValuesDoesntExists() throws NoSuchFieldException {
         Integer value = testSubject.getParameterAsInteger("notInteger");
+    }
+
+    @Test(expected = ClassCastException.class)
+    public void testIntegerValuesError() throws NoSuchFieldException {
+        Integer value = testSubject.getParameterAsInteger("map");
     }
 
     @Test
@@ -88,18 +80,19 @@ public class FieldsOnHashTest {
     public void testStringListValueError() {
         List<String> value = testSubject.getParameterAsStringList("notStringList");
     }
-//
-//    @Test
-//    public void testObjectListValue() {
-//        List<FieldsOnHash> value = testSubject.getParameterAsObjectList("objectList");
-//        Assert.assertEquals(list, value);
-//    }
-//
-//    @Test
-//    public void testObjectListValueError() {
-//        List<FieldsOnHash> value = testSubject.getParameterAsObjectList("notObjectList");
-//        Assert.assertNull(value);
-//    }
+
+    @Test
+    public void testObjectListValue() throws NoSuchFieldException {
+        List<FieldsOnHashImpl> value = testSubject.getParameterAsObjectList("objectList", FieldsOnHashImpl.class);
+        for (int i = 0; i < value.size(); i++) {
+            Assert.assertTrue(list.get(i).equals(value.get(i)));
+        }
+    }
+
+    @Test(expected = NoSuchFieldException.class)
+    public void testObjectListValueError() throws NoSuchFieldException {
+        List<FieldsOnHashImpl> value = testSubject.getParameterAsObjectList("notObjectList", FieldsOnHashImpl.class);
+    }
 
     @Test
     public void testCastedValueValue() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {

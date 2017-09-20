@@ -4,7 +4,6 @@ import com.google.common.base.CaseFormat;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.javapoet.*;
-import me.pagar.route.FieldsOnHash;
 
 import javax.lang.model.element.Modifier;
 import java.io.*;
@@ -22,17 +21,18 @@ public class CreatePojos {
         ClassName intergerClassName = ClassName.get("java.lang", "Integer");
         List<String> boxedClassesNames = Arrays.asList("Integer", "Boolean", "String");
 
-
         new codegeneration.Wrapper().forEachSchema((fileString) -> {
 
             JsonObject json = new Gson().fromJson(fileString, JsonObject.class);
             String newClassName = json.get("_class_").getAsString();
             String packageName = json.get("_package_").getAsString();
 
+            ClassName fieldsOnHash = ClassName.get(parentPackage(packageName), "FieldsOnHash");
+
             ClassName referencedClassName = ClassName.get(packageName, newClassName);
             TypeSpec.Builder classBuilder = TypeSpec.classBuilder(newClassName)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .superclass(FieldsOnHash.class)
+                .superclass(fieldsOnHash)
                 .addMethod(MethodSpec.constructorBuilder()
                     .addModifiers(Modifier.PUBLIC)
                     .addStatement("super(new $T())", ParameterizedTypeName.get(hashMapClassName, stringClassName, ClassName.OBJECT))
@@ -150,5 +150,8 @@ public class CreatePojos {
 
     }
 
+    public static String parentPackage(String packageName) {
+        return packageName.replaceAll("\\.[^\\.]+$", "");
+    }
 
 }

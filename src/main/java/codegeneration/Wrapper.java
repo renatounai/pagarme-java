@@ -12,13 +12,6 @@ public class Wrapper {
 
     public void forEachSchema(Consumer<String> function) throws IOException {
 
-<<<<<<< HEAD
-        Arrays.asList("address","balance","billing","cardhashkey","document",
-                "payable","recipient","splitrule","transfer","anticipationlimit",
-                "balanceinternal","bulkanticipation","customer","gatewayoperation",
-                "plan","refund","subscription","anticipationlimits","bankaccount",
-                "card","delivery","item","postback","shipping","transactions","phone").forEach((resource) -> {
-=======
         Arrays.asList(
             "address",
             "balance",
@@ -45,7 +38,7 @@ public class Wrapper {
             "postback",
             "shipping",
             "transactions").forEach((resource) -> {
->>>>>>> 6aa8b4481878aa5d7df2c4059e35d5855cd71c07
+
             ClassLoader classLoader = getClass().getClassLoader();
             Enumeration<URL> responseSchemaUrls = null;
             try {

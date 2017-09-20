@@ -1,0 +1,11 @@
+{
+  "_package_": "me.pagar.responseobject",
+  "_class_": "Card",
+  "properties": {
+    "holder_name": "String",
+    "expiration_date": "String",
+    "cvv": "String",
+    "number": "String",
+    "customer_id": "String"
+  }
+}

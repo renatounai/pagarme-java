@@ -8,12 +8,17 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
-@AllArgsConstructor
 public class OkHttpRequester implements HttpRequester {
 
     private OkHttpClient client;
     private String authenticationUsername;
     private String authenticationPassword;
+
+    public OkHttpRequester(OkHttpClient client, String username, String password) {
+        this.client = client;
+        this.authenticationPassword = password;
+        this.authenticationUsername = username;
+    }
 
     public OkHttpRequester(String username, String password) {
         this(new OkHttpClient(), username, password);

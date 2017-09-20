@@ -57,14 +57,14 @@ public class Shipping extends FieldsOnHash{
 
     public Address getAddress() {
         try {
-            return super.getParameterCasted("address", new Address());
+            return super.getParameterCasted("schema/response/address", new Address());
         } catch (Exception e) {
             return null;
         }
     }
 
     public Shipping setAddress(Address address) {
-        super.setParameter("address", address);
+        super.setParameter("schema/response/address", address);
         return this;
     }
 

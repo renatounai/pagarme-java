@@ -1,6 +1,6 @@
 package unit;
 
-import me.pagar.route.FieldsOnHash;
+import me.pagar.FieldsOnHash;
 
 import java.util.HashMap;
 import java.util.Map;

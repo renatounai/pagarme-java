@@ -1,4 +1,4 @@
-package me.pagar.route;
+package me.pagar.object;
 
 import java.util.Map;
 

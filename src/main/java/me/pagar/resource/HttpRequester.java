@@ -1,4 +1,4 @@
-package me.pagar.route;
+package me.pagar.resource;
 
 import java.io.IOException;
 import java.util.Map;

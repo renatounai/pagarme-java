@@ -1,4 +1,14 @@
-package me.pagar.route;
+package me.pagar.endpoint;
+
+import me.pagar.APiConfigurations;
+import me.pagar.ApiClient;
+import me.pagar.ApiErrors;
+import me.pagar.FieldsOnHash;
+import me.pagar.object.CanBecomeKeyValueVariable;
+import me.pagar.object.CanBecomeQueryString;
+import me.pagar.object.ResourceObject;
+import me.pagar.resource.HttpRequester;
+import me.pagar.resource.HttpResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,20 +17,13 @@ import java.util.List;
 
 public class EndpointConsumer {
 
-    private APiConfigurations configs;
-    private HttpRequester restClient;
+    private ApiClient client;
     private Action action = Action.GET;
     private List<String> resources = new ArrayList<>();
 
     //initial configs
-    public EndpointConsumer withConfigurations(APiConfigurations configs) {
-        this.configs = configs;
-        return this;
-    }
-
-    public EndpointConsumer withHttpClient(HttpRequester httpRequester) {
-        this.restClient = httpRequester;
-        return this;
+    public EndpointConsumer(ApiClient client) {
+        this.client = client;
     }
 
     /**
@@ -97,19 +100,83 @@ public class EndpointConsumer {
         HttpResponse response;
         switch (this.action){
             case GET:
-                response = this.restClient.get(url, parameters.toQueryString(), new HashMap<>());
+                response = this.client.get(url, parameters.toQueryString(), new HashMap<>());
                 break;
 
             case PUT:
-                response = this.restClient.put(url, parameters.toQueryString(), new HashMap<>());
+                response = this.client.put(url, parameters.toQueryString(), new HashMap<>());
                 break;
 
             case POST:
-                response = this.restClient.post(url, parameters.toQueryString(), new HashMap<>());
+                response = this.client.post(url, parameters.toQueryString(), new HashMap<>());
                 break;
 
             case DELETE:
-                response = this.restClient.delete(url, parameters.toQueryString(), new HashMap<>());
+                response = this.client.delete(url, parameters.toQueryString(), new HashMap<>());
+                break;
+
+            default:
+                break;
+        }
+        return null;
+    }
+
+    public <T extends FieldsOnHash> T withParameters(CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors {
+        StringBuilder urlBuilder = new StringBuilder();
+        for (String resource : resources) {
+            urlBuilder.append("/");
+            urlBuilder.append(resource);
+        }
+        String url = urlBuilder.toString();
+
+        HttpResponse response;
+        switch (this.action){
+            case GET:
+                response = this.client.get(url, parameters.toJson(), new HashMap<>());
+                break;
+
+            case PUT:
+                response = this.client.put(url, parameters.toJson(), new HashMap<>());
+                break;
+
+            case POST:
+                response = this.client.post(url, parameters.toJson(), new HashMap<>());
+                break;
+
+            case DELETE:
+                response = this.client.delete(url, parameters.toJson(), new HashMap<>());
+                break;
+
+            default:
+                break;
+        }
+        return null;
+    }
+
+    public <T extends FieldsOnHash> T withNoParameters() throws IOException, ApiErrors {
+        StringBuilder urlBuilder = new StringBuilder();
+        for (String resource : resources) {
+            urlBuilder.append("/");
+            urlBuilder.append(resource);
+        }
+        String url = urlBuilder.toString();
+
+        HttpResponse response;
+        switch (this.action){
+            case GET:
+                response = this.client.get(url, "", new HashMap<>());
+                break;
+
+            case PUT:
+                response = this.client.put(url, "", new HashMap<>());
+                break;
+
+            case POST:
+                response = this.client.post(url, "", new HashMap<>());
+                break;
+
+            case DELETE:
+                response = this.client.delete(url, "", new HashMap<>());
                 break;
 
             default:

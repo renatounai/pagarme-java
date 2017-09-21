@@ -1,4 +1,6 @@
-package me.pagar.route;
+package me.pagar;
+
+import me.pagar.resource.HttpRequester;
 
 public class APiConfigurations {
 

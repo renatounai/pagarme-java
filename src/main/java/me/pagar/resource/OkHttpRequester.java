@@ -1,6 +1,5 @@
-package me.pagar.route;
+package me.pagar.resource;
 
-import lombok.AllArgsConstructor;
 import okhttp3.*;
 
 import java.io.IOException;

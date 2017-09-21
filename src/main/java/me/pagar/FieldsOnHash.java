@@ -1,7 +1,9 @@
-package me.pagar.route;
+package me.pagar;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.pagar.object.CanBecomeKeyValueVariable;
+import me.pagar.object.CanLoadFieldsFromSources;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,8 +27,12 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
 
     public Integer getParameterAsInteger(String parameterName, Integer defaultValue) {
         Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
-        Integer parameterAsInteger = Integer.valueOf(String.valueOf(parameter));
-        return parameterAsInteger;
+        try {
+            Integer parameterAsInteger = Integer.valueOf(String.valueOf(parameter));
+            return parameterAsInteger;
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     public String getParameterAsString(String parameterName, String defaultValue) {
@@ -41,8 +47,12 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
 
     public Boolean getParameterAsBoolean(String parameterName, Boolean defaultValue) {
         Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
-        Boolean parameterAsBoolean = Boolean.valueOf(String.valueOf(parameter));
-        return parameterAsBoolean;
+        if (parameter != null && parameter instanceof Boolean) {
+            Boolean parameterAsBoolean = Boolean.valueOf(String.valueOf(parameter));
+            return parameterAsBoolean;
+        } else {
+            return defaultValue;
+        }
     }
 
     public <T extends FieldsOnHash> List<T> getParameterAsList(String parameterName, List<T> defaultValue) {
@@ -52,7 +62,11 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
 
     public List<String> getParameterAsStringList(String parameterName, List<String> defaultValue) {
         Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
-        return (List<String>) parameter;
+        try {
+            return (List<String>) parameter;
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     public <T extends FieldsOnHash> List<T> getParameterAsObjectList(String parameterName, Class<T> objectClass, List<T> defaultValue) {
@@ -82,7 +96,11 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
 
     public Map<String, Object> getParameterAsMap(String parameterName, Map<String, Object> defaultValue) {
         Object parameterValue = this.getParameterReferenceOrDefault(parameterName, defaultValue);
-        return (Map<String, Object>)parameterValue;
+        try {
+            return (Map<String, Object>)parameterValue;
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     public void setParameter(String parameterName, String parameterValue){

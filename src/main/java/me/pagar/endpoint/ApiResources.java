@@ -1,4 +1,4 @@
-package me.pagar.route;
+package me.pagar.endpoint;
 
 public enum ApiResources {
     TRANSACTIONS("transactions"),

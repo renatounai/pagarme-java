@@ -1,6 +1,6 @@
 package unit;
 
-import me.pagar.route.FieldsOnHash;
+import me.pagar.FieldsOnHash;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +23,7 @@ public class FieldsOnHashTest {
     public void setup() {
         testSubject = new FieldsOnHashImpl();
         testSubject.setParameter("integer", 123);
+        testSubject.setParameter("integerString", "123");
         testSubject.setParameter("string", "string");
         testSubject.setParameter("map", map);
         testSubject.setParameter("boolean", true);
@@ -32,72 +33,110 @@ public class FieldsOnHashTest {
     }
 
     @Test
-    public void testIntegerValues() throws NoSuchFieldException {
-        Integer value = testSubject.getParameterAsInteger("integer");
+    public void testIntegerValues() {
+        Integer value = testSubject.getParameterAsInteger("integer", null);
         Assert.assertEquals(Integer.valueOf(123), value);
     }
 
-    @Test(expected = NoSuchFieldException.class)
-    public void testIntegerValuesDoesntExists() throws NoSuchFieldException {
-        Integer value = testSubject.getParameterAsInteger("notInteger");
+    @Test
+    public void testStringIntegerValues() {
+        Integer value = testSubject.getParameterAsInteger("integerString", null);
+        Assert.assertEquals(Integer.valueOf(123), value);
     }
 
-    @Test(expected = ClassCastException.class)
-    public void testIntegerValuesError() throws NoSuchFieldException {
-        Integer value = testSubject.getParameterAsInteger("map");
+    @Test
+    public void testIntegerValuesDoesntExists() {
+        Integer value = testSubject.getParameterAsInteger("notInteger", 1337);
+        Assert.assertEquals(Integer.valueOf(1337), value);
+    }
+
+    @Test
+    public void testIntegerValuesError() {
+        Integer value = testSubject.getParameterAsInteger("map", 1337);
+        Assert.assertEquals(Integer.valueOf(1337), value);
     }
 
     @Test
     public void testBooleanValues() {
-        Boolean value = testSubject.getParameterAsBoolean("boolean");
-        Assert.assertEquals(true, value);
+        Boolean value = testSubject.getParameterAsBoolean("boolean", null);
+        Assert.assertTrue(value);
     }
 
-    @Test(expected = Exception.class)
+    @Test
+    public void testBooleanValuesDoesntExists() {
+        Boolean value = testSubject.getParameterAsBoolean("notBoolean", null);
+        Assert.assertNull(value);
+    }
+
+    @Test
     public void testBooleanValuesError() {
-        Boolean value = testSubject.getParameterAsBoolean("notBoolean");
+        Boolean value = testSubject.getParameterAsBoolean("map", null);
+        Assert.assertNull(value);
     }
 
     @Test
     public void testMapValue() {
-        Map<String, Object> value = testSubject.getParameterAsMap("map");
+        Map<String, Object> value = testSubject.getParameterAsMap("map", new HashMap<>());
         Assert.assertEquals(map, value);
         Assert.assertEquals(childMap, value.get("map"));
     }
 
-    @Test(expected = ClassCastException.class)
+    @Test
+    public void testMapValueDoesntExists() {
+        Map<String, Object> defaultValue = new HashMap<>();
+        Map<String, Object> value = testSubject.getParameterAsMap("notMap", defaultValue);
+        Assert.assertEquals(defaultValue, value);
+    }
+
+    @Test
     public void testMapValueError() {
-        Map<String, Object> value = testSubject.getParameterAsMap("notMap");
+        Map<String, Object> defaultValue = new HashMap<>();
+        Map<String, Object> value = testSubject.getParameterAsMap("string", defaultValue);
+        Assert.assertEquals(defaultValue, value);
     }
 
     @Test
     public void testStringListValue() {
-        List<String> value = testSubject.getParameterAsStringList("stringList");
+        List<String> defaultValue = new ArrayList<>();
+        List<String> value = testSubject.getParameterAsStringList("stringList", defaultValue);
         Assert.assertEquals(stringList, value);
     }
 
-    @Test(expected = ClassCastException.class)
+    @Test
+    public void testStringListValueDoesntExists() {
+        List<String> defaultValue = new ArrayList<>();
+        List<String> value = testSubject.getParameterAsStringList("notStringList", defaultValue);
+        Assert.assertEquals(defaultValue, value);
+    }
+
+    @Test
     public void testStringListValueError() {
-        List<String> value = testSubject.getParameterAsStringList("notStringList");
+        List<String> defaultValue = new ArrayList<>();
+        List<String> value = testSubject.getParameterAsStringList("string", defaultValue);
+        Assert.assertEquals(defaultValue, value);
     }
 
     @Test
     public void testObjectListValue() throws NoSuchFieldException {
-        List<FieldsOnHashImpl> value = testSubject.getParameterAsObjectList("objectList", FieldsOnHashImpl.class);
+        List<FieldsOnHashImpl> defaultValue = new ArrayList<>();
+        List<FieldsOnHashImpl> value = testSubject.getParameterAsObjectList("objectList", FieldsOnHashImpl.class, defaultValue);
         for (int i = 0; i < value.size(); i++) {
             Assert.assertTrue(list.get(i).equals(value.get(i)));
         }
     }
 
-    @Test(expected = NoSuchFieldException.class)
+    @Test
     public void testObjectListValueError() throws NoSuchFieldException {
-        List<FieldsOnHashImpl> value = testSubject.getParameterAsObjectList("notObjectList", FieldsOnHashImpl.class);
+        List<FieldsOnHashImpl> defaultValue = new ArrayList<>();
+        List<FieldsOnHashImpl> value = testSubject.getParameterAsObjectList("notObjectList", FieldsOnHashImpl.class, defaultValue);
+        Assert.assertEquals(defaultValue, value);
     }
 
     @Test
     public void testCastedValueValue() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        FieldsOnHashImpl value = testSubject.getParameterCasted("map", new FieldsOnHashImpl());
-        Map<String, Object> valueMap = testSubject.getParameterAsMap("map");
+        FieldsOnHashImpl defaultValue = new FieldsOnHashImpl();
+        FieldsOnHashImpl value = testSubject.<FieldsOnHashImpl>getParameterCasted("map", new FieldsOnHashImpl(), defaultValue);
+        Map<String, Object> valueMap = testSubject.getParameterAsMap("map", null);
         Assert.assertEquals(valueMap, value.fields());
     }
 

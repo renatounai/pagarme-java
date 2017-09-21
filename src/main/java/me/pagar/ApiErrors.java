@@ -1,4 +1,4 @@
-package me.pagar.route;
+package me.pagar;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

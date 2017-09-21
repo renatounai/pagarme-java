@@ -1,7 +1,5 @@
 package me.pagar;
 
-import lombok.NonNull;
-import me.pagar.endpoint.TransactionRoutes;
 import me.pagar.resource.HttpRequester;
 import me.pagar.resource.HttpResponse;
 import me.pagar.resource.OkHttpRequester;
@@ -26,11 +24,6 @@ public class ApiClient implements HttpRequester {
         this.configs = configs;
         this.httpClient = new OkHttpRequester(configs.apiKey, "x");
     }
-
-    public TransactionRoutes transactions() {
-        return new TransactionRoutes(httpClient, configs);
-    }
-
 
     @Override
     public HttpResponse get(String path, String parameters, Map<String, String> headers) throws IOException {

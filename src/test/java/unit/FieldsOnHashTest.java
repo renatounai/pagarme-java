@@ -16,6 +16,7 @@ public class FieldsOnHashTest {
     public Map<String, Object> map = new HashMap<>();
     public Map<String, Object> childMap = new HashMap<>();
     {
+        childMap.put("integer", 123);
         map.put("map", childMap);
     }
 
@@ -201,4 +202,34 @@ public class FieldsOnHashTest {
         );
 
     }
+
+
+//    public FieldsOnHashImpl testSubject;
+//    public List<FieldsOnHash> list = Arrays.asList(new FieldsOnHashImpl(), new FieldsOnHashImpl());
+//    public List<String> stringList = Arrays.asList("1", "2");
+//    public Map<String, Object> map = new HashMap<>();
+//    public Map<String, Object> childMap = new HashMap<>();
+
+//    testSubject = new FieldsOnHashImpl();
+//        testSubject.setParameter("integer", 123);
+//        testSubject.setParameter("integerString", "123");
+//        testSubject.setParameter("string", "string");
+//        testSubject.setParameter("map", map);
+//        testSubject.setParameter("boolean", true);
+//        testSubject.setParameter("objectList", list);
+//        testSubject.setParameterCollection("stringList", stringList);
+
+    @Test
+    public void testToQueryString() {
+        String queryParams = testSubject.toQueryString();
+        List<String> actualParameters = Arrays.asList(queryParams.split("&"));
+
+        List<String> expectedParameters = Arrays.asList("integer=123", "integerString=123", "string=string",
+            "map[map][integer]=123", "boolean=true", "objectList[1]=", "objectList[2]=",
+            "stringList[1]=1", "stringList[2]=2");
+
+        Assert.assertEquals(expectedParameters.size(), actualParameters.size());
+        Assert.assertTrue(actualParameters.containsAll(expectedParameters));
+    }
+
 }

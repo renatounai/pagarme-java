@@ -46,10 +46,19 @@ public class OkHttpRequester implements HttpRequester {
     private HttpResponse doRequest(String method, String url, String body, Map<String, String> headers) throws IOException {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body);
         String basicAuth = Credentials.basic(authenticationUsername, authenticationPassword, Charset.forName("utf-8"));
-        Request.Builder requestBuilder = new Request.Builder()
+        Request.Builder requestBuilder = new Request.Builder();
+
+        if(method.equals("GET")) {
+            requestBuilder
+                .url(url + "?" + body)
+                .get();
+        } else {
+            requestBuilder
                 .url(url)
-                .method(method, requestBody)
-                .addHeader("Authorization", basicAuth);
+                .method(method, requestBody);
+        }
+
+        requestBuilder.addHeader("Authorization", basicAuth);
         headers.forEach((key, value) -> {
             requestBuilder.addHeader(key, value);
         });

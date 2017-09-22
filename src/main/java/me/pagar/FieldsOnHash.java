@@ -21,22 +21,26 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
         loadParametersFrom(parameters);
     }
 
-    public Map<String, Object> fields(){
+    public Map<String, Object> toMap(){
         return this.fields;
     }
 
-    public Integer getParameterAsInteger(String parameterName, Integer defaultValue) {
-        Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
+    public Integer getParameterAsInteger(String parameterName) throws NoFieldWithName, IncompatibleClass {
+        Object parameter = getParameterReferenceOrDefault(parameterName);
+        if(parameter == null) {
+            return null;
+        }
+
         try {
             Integer parameterAsInteger = Integer.valueOf(String.valueOf(parameter));
             return parameterAsInteger;
-        } catch (Exception e) {
-            return defaultValue;
+        } catch (NumberFormatException e) {
+            throw new IncompatibleClass();
         }
     }
 
-    public String getParameterAsString(String parameterName, String defaultValue) {
-        Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
+    public String getParameterAsString(String parameterName) throws NoFieldWithName {
+        Object parameter = getParameterReferenceOrDefault(parameterName);
         if(parameter == null){
             return "null";
         } else {
@@ -45,61 +49,68 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
         }
     }
 
-    public Boolean getParameterAsBoolean(String parameterName, Boolean defaultValue) {
-        Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
-        if (parameter != null && parameter instanceof Boolean) {
-            Boolean parameterAsBoolean = Boolean.valueOf(String.valueOf(parameter));
-            return parameterAsBoolean;
-        } else {
-            return defaultValue;
+    public Boolean getParameterAsBoolean(String parameterName) throws NoFieldWithName, IncompatibleClass {
+        Object parameter = getParameterReferenceOrDefault(parameterName);
+        if(parameter == null) {
+            return null;
         }
+
+        String parameterText = String.valueOf(parameter).toLowerCase();
+        Boolean parameterIsNotLikeBoolean = !parameterText.equals("true") && !parameter.equals("false");
+        if(parameterIsNotLikeBoolean) {
+            throw new IncompatibleClass();
+        }
+        Boolean parameterAsBoolean = Boolean.valueOf(parameterText);
+        return parameterAsBoolean;
     }
 
-    public <T extends FieldsOnHash> List<T> getParameterAsList(String parameterName, List<T> defaultValue) {
-        Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
-        return (List<T>) parameter;
-    }
-
-    public List<String> getParameterAsStringList(String parameterName, List<String> defaultValue) {
-        Object parameter = getParameterReferenceOrDefault(parameterName, defaultValue);
+    public List<String> getParameterAsStringList(String parameterName) throws NoFieldWithName, IncompatibleClass {
+        Object parameter = getParameterReferenceOrDefault(parameterName);
         try {
             return (List<String>) parameter;
-        } catch (Exception e) {
-            return defaultValue;
+        } catch (ClassCastException e) {
+            throw new IncompatibleClass();
         }
     }
 
-    public <T extends FieldsOnHash> List<T> getParameterAsObjectList(String parameterName, Class<T> objectClass, List<T> defaultValue) {
-        List<Map<String, Object>> parameterValue = (List<Map<String, Object>>) getParameterReferenceOrDefault(parameterName, defaultValue);
-        try{
+    public <T extends CanLoadFieldsFromSources> List<T> getParameterAsObjectList(String parameterName, Class<T> objectClass) throws NoFieldWithName, IncompatibleClass {
+        Object parameterValue =  getParameterReferenceOrDefault(parameterName);
+
+        try {
+            List<Map<String, Object>> parameterValueCasted = (List<Map<String, Object>>) parameterValue;
+            if(parameterValue == null) {
+                return null;
+            }
+
             List<T> instanciatedObjects = new ArrayList<>();
-            for(Map<String, Object> map : parameterValue) {
+            for(Map<String, Object> map : parameterValueCasted) {
                 T objectInstance = objectClass.newInstance();
                 objectInstance.loadParametersFrom(map);
                 instanciatedObjects.add(objectInstance);
             }
             return instanciatedObjects;
         } catch (Exception e) {
-            return defaultValue;
+            throw new IncompatibleClass();
         }
+
     }
 
-    public <T extends CanLoadFieldsFromSources> T getParameterCasted(String parameterName, T classInstance, T defaultValue) {
-        Map<String, Object> clasInstanceParameters = getParameterAsMap(parameterName, null);
-        if(clasInstanceParameters == null) {
-            return defaultValue;
-        } else {
-            classInstance.loadParametersFrom(clasInstanceParameters);
-            return classInstance;
+    public <T extends CanLoadFieldsFromSources> T getParameterCasted(String parameterName, T classInstance) throws NoFieldWithName, IncompatibleClass {
+        Map<String, Object> classInstanceParameters = getParameterAsMap(parameterName);
+
+        if(classInstanceParameters == null) {
+            return null;
         }
+        classInstance.loadParametersFrom(classInstanceParameters);
+        return classInstance;
     }
 
-    public Map<String, Object> getParameterAsMap(String parameterName, Map<String, Object> defaultValue) {
-        Object parameterValue = this.getParameterReferenceOrDefault(parameterName, defaultValue);
+    public Map<String, Object> getParameterAsMap(String parameterName) throws NoFieldWithName, IncompatibleClass {
+        Object parameterValue = this.getParameterReferenceOrDefault(parameterName);
         try {
             return (Map<String, Object>)parameterValue;
-        } catch (Exception e) {
-            return defaultValue;
+        } catch (ClassCastException e) {
+            throw new IncompatibleClass();
         }
     }
 
@@ -119,13 +130,13 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
         this.fields.put(parameterName, parameterValue);
     }
 
-    public void setParameter(String parameterName, FieldsOnHash child){
-        this.fields.put(parameterName, child.fields());
+    public void setParameter(String parameterName, CanBecomeKeyValueVariable child){
+        this.fields.put(parameterName, child.toMap());
     }
 
-    public <T extends FieldsOnHash> void setParameter(String parameterName, Collection<T> list) {
+    public <T extends CanBecomeKeyValueVariable> void setParameter(String parameterName, Collection<T> list) {
         List<Map<String, Object>> mappedObjects = list.stream()
-                .map((item) -> item.fields())
+                .map((item) -> item.toMap())
                 .collect(Collectors.toList());
         this.fields.put(parameterName, mappedObjects);
     }
@@ -199,12 +210,12 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
         }
     }
 
-    protected Object getParameterReferenceOrDefault(String parameterName, Object defaultValue) {
+    protected Object getParameterReferenceOrDefault(String parameterName) throws NoFieldWithName {
         if(this.fields.containsKey(parameterName)) {
             Object parameterValue = this.fields.get(parameterName);
             return parameterValue;
         } else {
-            return defaultValue;
+            throw new NoFieldWithName();
         }
     }
 

@@ -1,6 +1,8 @@
 package unit;
 
 import me.pagar.FieldsOnHash;
+import me.pagar.IncompatibleClass;
+import me.pagar.NoFieldWithName;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,120 +27,152 @@ public class FieldsOnHashTest {
         testSubject = new FieldsOnHashImpl();
         testSubject.setParameter("integer", 123);
         testSubject.setParameter("integerString", "123");
+        testSubject.setParameter("booleanString", "true");
         testSubject.setParameter("string", "string");
         testSubject.setParameter("map", map);
         testSubject.setParameter("boolean", true);
         testSubject.setParameter("objectList", list);
         testSubject.setParameterCollection("stringList", stringList);
-
+        testSubject.setParameter("null", (String) null);
     }
 
     @Test
-    public void testIntegerValues() {
-        Integer value = testSubject.getParameterAsInteger("integer", null);
+    public void testStringNullValue() throws NoFieldWithName {
+        String value = testSubject.getParameterAsString("null");
+        Assert.assertEquals("null", value);
+    }
+
+    @Test
+    public void testIntegerNullValue() throws NoFieldWithName, IncompatibleClass {
+        Integer value = testSubject.getParameterAsInteger("null");
+        Assert.assertEquals(null, value);
+    }
+
+    @Test
+    public void testBooleanNullValue() throws IncompatibleClass, NoFieldWithName {
+        Boolean value = testSubject.getParameterAsBoolean("null");
+        Assert.assertEquals(null, value);
+    }
+
+    @Test
+    public void testObjectListNullValue() throws IncompatibleClass, NoFieldWithName {
+        Object value = testSubject.getParameterAsObjectList("null", FieldsOnHashImpl.class);
+        Assert.assertEquals(null, value);
+    }
+
+    @Test
+    public void testMapNullValue() throws IncompatibleClass, NoFieldWithName {
+        Map<String, Object> value = testSubject.getParameterAsMap("null");
+        Assert.assertEquals(null, value);
+    }
+
+    @Test
+    public void testStringListNullValue() throws IncompatibleClass, NoFieldWithName {
+        List<String> value = testSubject.getParameterAsStringList("null");
+        Assert.assertEquals(null, value);
+    }
+
+    @Test
+    public void testCastedObjectNullValue() throws IncompatibleClass, NoFieldWithName {
+        FieldsOnHash value = testSubject.getParameterCasted("null", new FieldsOnHashImpl());
+        Assert.assertEquals(null, value);
+    }
+
+    @Test
+    public void testIntegerValues() throws NoFieldWithName, IncompatibleClass {
+        Integer value = testSubject.getParameterAsInteger("integer");
         Assert.assertEquals(Integer.valueOf(123), value);
     }
 
     @Test
-    public void testStringIntegerValues() {
-        Integer value = testSubject.getParameterAsInteger("integerString", null);
+    public void testStringIntegerValues() throws NoFieldWithName, IncompatibleClass {
+        Integer value = testSubject.getParameterAsInteger("integerString");
         Assert.assertEquals(Integer.valueOf(123), value);
     }
 
-    @Test
-    public void testIntegerValuesDoesntExists() {
-        Integer value = testSubject.getParameterAsInteger("notInteger", 1337);
-        Assert.assertEquals(Integer.valueOf(1337), value);
+    @Test(expected = NoFieldWithName.class)
+    public void testIntegerValuesDoesntExists() throws NoFieldWithName, IncompatibleClass {
+        Integer value = testSubject.getParameterAsInteger("notInteger");
+    }
+
+    @Test(expected = IncompatibleClass.class)
+    public void testIntegerValuesError() throws NoFieldWithName, IncompatibleClass {
+        Integer value = testSubject.getParameterAsInteger("map");
     }
 
     @Test
-    public void testIntegerValuesError() {
-        Integer value = testSubject.getParameterAsInteger("map", 1337);
-        Assert.assertEquals(Integer.valueOf(1337), value);
-    }
-
-    @Test
-    public void testBooleanValues() {
-        Boolean value = testSubject.getParameterAsBoolean("boolean", null);
+    public void testBooleanValues() throws IncompatibleClass, NoFieldWithName {
+        Boolean value = testSubject.getParameterAsBoolean("boolean");
         Assert.assertTrue(value);
     }
 
     @Test
-    public void testBooleanValuesDoesntExists() {
-        Boolean value = testSubject.getParameterAsBoolean("notBoolean", null);
-        Assert.assertNull(value);
+    public void testBooleanStringValues() throws IncompatibleClass, NoFieldWithName {
+        Boolean value = testSubject.getParameterAsBoolean("booleanString");
+        Assert.assertTrue(value);
+    }
+
+    @Test(expected = NoFieldWithName.class)
+    public void testBooleanValuesDoesntExists() throws IncompatibleClass, NoFieldWithName {
+        Boolean value = testSubject.getParameterAsBoolean("notBoolean");
+    }
+
+    @Test(expected = IncompatibleClass.class)
+    public void testBooleanValuesError() throws IncompatibleClass, NoFieldWithName {
+        Boolean value = testSubject.getParameterAsBoolean("map");
     }
 
     @Test
-    public void testBooleanValuesError() {
-        Boolean value = testSubject.getParameterAsBoolean("map", null);
-        Assert.assertNull(value);
-    }
-
-    @Test
-    public void testMapValue() {
-        Map<String, Object> value = testSubject.getParameterAsMap("map", new HashMap<>());
+    public void testMapValue() throws IncompatibleClass, NoFieldWithName {
+        Map<String, Object> value = testSubject.getParameterAsMap("map");
         Assert.assertEquals(map, value);
         Assert.assertEquals(childMap, value.get("map"));
     }
 
-    @Test
-    public void testMapValueDoesntExists() {
-        Map<String, Object> defaultValue = new HashMap<>();
-        Map<String, Object> value = testSubject.getParameterAsMap("notMap", defaultValue);
-        Assert.assertEquals(defaultValue, value);
+    @Test(expected = NoFieldWithName.class)
+    public void testMapValueDoesntExists() throws IncompatibleClass, NoFieldWithName {
+        Map<String, Object> value = testSubject.getParameterAsMap("notMap");
+    }
+
+    @Test(expected = IncompatibleClass.class)
+    public void testMapValueError() throws IncompatibleClass, NoFieldWithName {
+        Map<String, Object> value = testSubject.getParameterAsMap("string");
     }
 
     @Test
-    public void testMapValueError() {
-        Map<String, Object> defaultValue = new HashMap<>();
-        Map<String, Object> value = testSubject.getParameterAsMap("string", defaultValue);
-        Assert.assertEquals(defaultValue, value);
-    }
-
-    @Test
-    public void testStringListValue() {
-        List<String> defaultValue = new ArrayList<>();
-        List<String> value = testSubject.getParameterAsStringList("stringList", defaultValue);
+    public void testStringListValue() throws IncompatibleClass, NoFieldWithName {
+        List<String> value = testSubject.getParameterAsStringList("stringList");
         Assert.assertEquals(stringList, value);
     }
 
-    @Test
-    public void testStringListValueDoesntExists() {
-        List<String> defaultValue = new ArrayList<>();
-        List<String> value = testSubject.getParameterAsStringList("notStringList", defaultValue);
-        Assert.assertEquals(defaultValue, value);
+    @Test(expected = NoFieldWithName.class)
+    public void testStringListValueDoesntExists() throws IncompatibleClass, NoFieldWithName {
+        List<String> value = testSubject.getParameterAsStringList("notStringList");
+    }
+
+    @Test(expected = IncompatibleClass.class)
+    public void testStringListValueError() throws IncompatibleClass, NoFieldWithName {
+        List<String> value = testSubject.getParameterAsStringList("string");
     }
 
     @Test
-    public void testStringListValueError() {
-        List<String> defaultValue = new ArrayList<>();
-        List<String> value = testSubject.getParameterAsStringList("string", defaultValue);
-        Assert.assertEquals(defaultValue, value);
-    }
-
-    @Test
-    public void testObjectListValue() throws NoSuchFieldException {
-        List<FieldsOnHashImpl> defaultValue = new ArrayList<>();
-        List<FieldsOnHashImpl> value = testSubject.getParameterAsObjectList("objectList", FieldsOnHashImpl.class, defaultValue);
+    public void testObjectListValue() throws NoSuchFieldException, IncompatibleClass, NoFieldWithName {
+        List<FieldsOnHashImpl> value = testSubject.getParameterAsObjectList("objectList", FieldsOnHashImpl.class);
         for (int i = 0; i < value.size(); i++) {
             Assert.assertTrue(list.get(i).equals(value.get(i)));
         }
     }
 
-    @Test
-    public void testObjectListValueError() throws NoSuchFieldException {
-        List<FieldsOnHashImpl> defaultValue = new ArrayList<>();
-        List<FieldsOnHashImpl> value = testSubject.getParameterAsObjectList("notObjectList", FieldsOnHashImpl.class, defaultValue);
-        Assert.assertEquals(defaultValue, value);
+    @Test(expected = NoFieldWithName.class)
+    public void testObjectListValueError() throws NoSuchFieldException, IncompatibleClass, NoFieldWithName {
+        List<FieldsOnHashImpl> value = testSubject.getParameterAsObjectList("notObjectList", FieldsOnHashImpl.class);
     }
 
     @Test
-    public void testCastedValueValue() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        FieldsOnHashImpl defaultValue = new FieldsOnHashImpl();
-        FieldsOnHashImpl value = testSubject.<FieldsOnHashImpl>getParameterCasted("map", new FieldsOnHashImpl(), defaultValue);
-        Map<String, Object> valueMap = testSubject.getParameterAsMap("map", null);
-        Assert.assertEquals(valueMap, value.fields());
+    public void testCastedValueValue() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IncompatibleClass, NoFieldWithName {
+        FieldsOnHashImpl value = testSubject.<FieldsOnHashImpl>getParameterCasted("map", new FieldsOnHashImpl());
+        Map<String, Object> valueMap = testSubject.getParameterAsMap("map");
+        Assert.assertEquals(valueMap, value.toMap());
     }
 
     @Test
@@ -186,7 +220,7 @@ public class FieldsOnHashTest {
             "\"integerList\":[123]" +
         "}";
         FieldsOnHash testSubject = new FieldsOnHashImpl(jsonString);
-        Map<String, Object> fields = testSubject.fields();
+        Map<String, Object> fields = testSubject.toMap();
 
         Assert.assertTrue(
     fields.get("integer").equals(123) ||

@@ -5,7 +5,7 @@
     "plan_id": "String",
     "card_hash": "String",
     "card_id": "String",
-    "card_number": "String"
+    "card_number": "String",
     "card_cvv": "String",
     "card_holder_name": "String",
     "card_expiration_date": "String",

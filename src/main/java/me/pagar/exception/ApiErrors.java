@@ -1,4 +1,4 @@
-package me.pagar;
+package me.pagar.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -4,8 +4,8 @@ import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import me.pagar.APiConfigurations;
 import me.pagar.ApiClient;
-import me.pagar.ApiErrors;
-import me.pagar.FieldsOnHash;
+import me.pagar.exception.ApiErrors;
+import me.pagar.generickeyvalueobject.FieldsOnHash;
 import me.pagar.router.TransactionRouter;
 import org.junit.Before;
 import org.junit.Rule;
@@ -49,11 +49,10 @@ public class TransactionTest {
                 )
         );
         wireMockRule.stubFor(
-            get(urlPathEqualTo("/transactions"))
-                .withQueryParam("key", equalTo("value"))
+            get(urlPathMatching("/transactions?(.+=.+)+"))
                 .willReturn(aResponse()
-                        .withBody("[]")
-                        .withStatus(200)
+                    .withBody("[]")
+                    .withStatus(200)
                 )
         );
         wireMockRule.stubFor(
@@ -103,7 +102,7 @@ public class TransactionTest {
         new TransactionRouter(client)
             .find(parameters);
 
-        wireMockRule.verify(1, getRequestedFor(urlEqualTo("/transactions"))
+        wireMockRule.verify(1, getRequestedFor(urlMatching("/transactions.*"))
             .withBasicAuth(new BasicCredentials(configs.apiKey, "x"))
             .withQueryParam("key", equalTo("value"))
         );

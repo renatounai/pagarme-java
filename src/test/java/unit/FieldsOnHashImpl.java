@@ -1,6 +1,6 @@
 package unit;
 
-import me.pagar.FieldsOnHash;
+import me.pagar.generickeyvalueobject.FieldsOnHash;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package me.pagar.object;
+package me.pagar.objecttraits;
 
 public interface CanBecomeQueryString {
 

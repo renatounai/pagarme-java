@@ -1,5 +1,5 @@
 {
-  "_package_": "me.pagar.responseobject",
+  "_package_": "me.pagar.requestobject",
   "_class_": "Plan",
   "properties": {
     "amount": "Integer",

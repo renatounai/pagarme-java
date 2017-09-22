@@ -1,19 +1,15 @@
 package me.pagar.endpoint;
 
-import me.pagar.APiConfigurations;
 import me.pagar.ApiClient;
-import me.pagar.ApiErrors;
-import me.pagar.FieldsOnHash;
-import me.pagar.object.CanBecomeKeyValueVariable;
-import me.pagar.object.CanBecomeQueryString;
-import me.pagar.object.ResourceObject;
-import me.pagar.resource.HttpRequester;
+import me.pagar.exception.ApiErrors;
+import me.pagar.generickeyvalueobject.FieldsOnHash;
+import me.pagar.objecttraits.CanBecomeKeyValueVariable;
+import me.pagar.objecttraits.CanBecomeQueryString;
+import me.pagar.objecttraits.ResourceObject;
 import me.pagar.resource.HttpResponse;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Stack;
 
 /**
@@ -81,7 +77,7 @@ public class EndpointConsumer {
     }
 
     public EndpointConsumer of(ResourceObject object) {
-        return addResourcesAndReturnThis(object.getId(), object.getObject());
+        return addResourcesAndReturnThis(object.id(), object.object());
     }
 
     private EndpointConsumer addResourcesAndReturnThis(String... resources) {

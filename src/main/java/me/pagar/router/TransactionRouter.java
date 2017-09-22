@@ -2,12 +2,11 @@ package me.pagar.router;
 
 import me.pagar.APiConfigurations;
 import me.pagar.ApiClient;
-import me.pagar.ApiErrors;
-import me.pagar.FieldsOnHash;
+import me.pagar.exception.ApiErrors;
 import me.pagar.endpoint.ApiResources;
 import me.pagar.endpoint.EndpointConsumer;
-import me.pagar.object.CanBecomeKeyValueVariable;
-import me.pagar.object.CanBecomeQueryString;
+import me.pagar.objecttraits.CanBecomeKeyValueVariable;
+import me.pagar.objecttraits.CanBecomeQueryString;
 
 import java.io.IOException;
 

@@ -28,11 +28,13 @@ public class CreatePojos {
             String packageName = json.get("_package_").getAsString();
 
             ClassName fieldsOnHash = ClassName.get(parentPackage(packageName), "FieldsOnHash");
+            ClassName resourceObject = ClassName.get("me.pagar.objecttrait", "ResourceObject");
 
             ClassName referencedClassName = ClassName.get(packageName, newClassName);
             TypeSpec.Builder classBuilder = TypeSpec.classBuilder(newClassName)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .superclass(fieldsOnHash)
+                .addSuperinterface(resourceObject)
                 .addMethod(MethodSpec.constructorBuilder()
                     .addModifiers(Modifier.PUBLIC)
                     .addStatement("super(new $T())", ParameterizedTypeName.get(hashMapClassName, stringClassName, ClassName.OBJECT))

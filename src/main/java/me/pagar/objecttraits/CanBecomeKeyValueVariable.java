@@ -1,4 +1,4 @@
-package me.pagar.object;
+package me.pagar.objecttraits;
 
 
 import java.util.Map;

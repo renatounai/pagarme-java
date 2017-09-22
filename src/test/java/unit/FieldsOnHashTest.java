@@ -1,8 +1,8 @@
 package unit;
 
-import me.pagar.FieldsOnHash;
-import me.pagar.IncompatibleClass;
-import me.pagar.NoFieldWithName;
+import me.pagar.generickeyvalueobject.FieldsOnHash;
+import me.pagar.exception.IncompatibleClass;
+import me.pagar.exception.NoFieldWithName;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -259,11 +259,13 @@ public class FieldsOnHashTest {
         List<String> actualParameters = Arrays.asList(queryParams.split("&"));
 
         List<String> expectedParameters = Arrays.asList("integer=123", "integerString=123", "string=string",
-            "map[map][integer]=123", "boolean=true", "objectList[1]=", "objectList[2]=",
-            "stringList[1]=1", "stringList[2]=2");
+            "map[map][integer]=123", "boolean=true", "objectList[0]=", "objectList[1]=",
+            "stringList[0]=1", "stringList[1]=2", "booleanString=true");
 
         Assert.assertEquals(expectedParameters.size(), actualParameters.size());
-        Assert.assertTrue(actualParameters.containsAll(expectedParameters));
+        for (String expectedValue : expectedParameters) {
+            Assert.assertTrue(actualParameters.contains(expectedValue));
+        }
     }
 
 }

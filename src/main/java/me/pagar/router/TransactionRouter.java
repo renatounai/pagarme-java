@@ -7,6 +7,7 @@ import me.pagar.endpoint.ApiResources;
 import me.pagar.endpoint.EndpointConsumer;
 import me.pagar.objecttraits.CanBecomeKeyValueVariable;
 import me.pagar.objecttraits.CanBecomeQueryString;
+import me.pagar.objecttraits.ResourceObject;
 
 import java.io.IOException;
 
@@ -53,4 +54,21 @@ public class TransactionRouter {
             .withNoParameters();
 
     }
+
+    public Object findById(ResourceObject resource) throws IOException, ApiErrors {
+        return findById(resource.id());
+
+    }
+
+    public Object refund(String id, CanBecomeKeyValueVariable... parameters) throws IOException, ApiErrors {
+        return new EndpointConsumer(client)
+            .post("refund")
+            .of(ApiResources.TRANSACTIONS, id)
+            .withNoParameters();
+    }
+
+    public Object refund(ResourceObject resource, CanBecomeKeyValueVariable... parameters) throws IOException, ApiErrors {
+        return refund(resource.id());
+    }
+
 }

@@ -20,11 +20,12 @@ public class EndpointConsumer {
 
     private ApiClient client;
     private Action action = Action.GET;
-    private Stack<String> resources = new Stack<>();
+    private Stack<String> resources;
 
     //initial configs
     public EndpointConsumer(ApiClient client) {
         this.client = client;
+        resources = new Stack<>();
     }
 
     /**
@@ -41,6 +42,11 @@ public class EndpointConsumer {
 
     public EndpointConsumer update() {
         return setActionAndReturnThis(Action.PUT);
+    }
+
+    public EndpointConsumer post(String action) {
+        this.resources.push(action);
+        return setActionAndReturnThis(Action.POST);
     }
 
     public EndpointConsumer find(String id) {
@@ -81,8 +87,7 @@ public class EndpointConsumer {
     }
 
     private EndpointConsumer addResourcesAndReturnThis(String... resources) {
-        for(int i = 0; i < resources.length; i++){
-            String resource = resources[i];
+        for (String resource : resources) {
             this.resources.push(resource);
         }
         return this;

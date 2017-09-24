@@ -25,9 +25,7 @@ public class TransactionTest {
 
     @Before
     public void beforeEach() {
-        APiConfigurations configs = new APiConfigurations();
-        configs.apiKey = "API KEY";
-        configs.encryptionKey = "ENCRYPTION KEY";
+        APiConfigurations configs = new APiConfigurations("API KEY", "ENCRYPTION KEY");
         configs.baseUrl = "http://localhost:" + wireMockRule.port();
         this.configs = configs;
 

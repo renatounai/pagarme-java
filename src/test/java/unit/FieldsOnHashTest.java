@@ -168,6 +168,11 @@ public class FieldsOnHashTest {
         List<FieldsOnHashImpl> value = testSubject.getParameterAsObjectList("notObjectList", FieldsOnHashImpl.class);
     }
 
+    @Test(expected = IncompatibleClass.class)
+    public void testObjectListlassError() throws NoSuchFieldException, IncompatibleClass, NoFieldWithName {
+        List<FieldsOnHashError> value = testSubject.getParameterAsObjectList("objectList", FieldsOnHashError.class);
+    }
+
     @Test
     public void testCastedValueValue() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IncompatibleClass, NoFieldWithName {
         FieldsOnHashImpl value = testSubject.<FieldsOnHashImpl>getParameterCasted("map", new FieldsOnHashImpl());

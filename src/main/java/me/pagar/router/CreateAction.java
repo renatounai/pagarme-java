@@ -15,9 +15,10 @@ import java.io.IOException;
 class CreateAction<T extends FieldsOnHash> {
 
     T execute(ApiClient client, ApiResources resource, CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors {
-        return new EndpointConsumer(client)
-            .create()
-            .of(resource)
-            .withParameters(parameters);
+//        return new EndpointConsumer(client)
+//            .create()
+//            .of(resource)
+//            .withParameters(parameters);
+        return null;
     }
 }

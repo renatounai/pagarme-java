@@ -2,190 +2,167 @@ package me.pagar.endpoint;
 
 import me.pagar.ApiClient;
 import me.pagar.exception.ApiErrors;
-import me.pagar.generickeyvalueobject.FieldsOnHash;
+import me.pagar.exception.IncompatibleClass;
+import me.pagar.exception.Messages;
 import me.pagar.objecttraits.CanBecomeKeyValueVariable;
-import me.pagar.objecttraits.CanBecomeQueryString;
+import me.pagar.objecttraits.CanLoadFieldsFromSources;
 import me.pagar.objecttraits.ResourceObject;
+import me.pagar.resource.GsonConverter;
 import me.pagar.resource.HttpResponse;
+import me.pagar.resource.JsonConverter;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Resolves endpoint building and calling
- * Resolves possible parsings
+ * Resolves possible parsings and middleware stuff after request
  */
-public class EndpointConsumer {
+public class EndpointConsumer<T extends CanLoadFieldsFromSources, T2 extends EndpointConsumer> {
 
     private ApiClient client;
     private Action action = Action.GET;
     private Stack<String> resources;
+    private JsonConverter converter;
+    private Class<T> classType;
 
     //initial configs
-    public EndpointConsumer(ApiClient client) {
+    EndpointConsumer(ApiClient client, JsonConverter converter, Class<T> classType) {
         this.client = client;
+        this.converter = converter;
+        this.classType = classType;
         resources = new Stack<>();
+    }
+
+    public EndpointConsumer(ApiClient client, Class<T> classType) {
+        this(client, new GsonConverter(), classType);
     }
 
     /**
      * Set action.
      * Resolves urls ending with special ending actions - calculate_installments, refund, collect_payment, etc
      */
-    public EndpointConsumer create() {
+    public T2 create() {
         return setActionAndReturnThis(Action.POST);
     }
 
-    public EndpointConsumer delete() {
+    public T2 delete() {
         return setActionAndReturnThis(Action.DELETE);
     }
 
-    public EndpointConsumer update() {
+    public T2 update() {
         return setActionAndReturnThis(Action.PUT);
     }
 
-    public EndpointConsumer post(String action) {
+    public T2 post(String action) {
         this.resources.push(action);
         return setActionAndReturnThis(Action.POST);
     }
 
-    public EndpointConsumer find(String id) {
+    public T2 find(String id) {
         this.resources.add(id);
         return setActionAndReturnThis(Action.GET);
     }
 
-    public EndpointConsumer find() {
+    public T2 find() {
         return setActionAndReturnThis(Action.GET);
     }
 
-    private EndpointConsumer setActionAndReturnThis(Action action) {
+    private T2 setActionAndReturnThis(Action action) {
         this.action = action;
-        return this;
+        return (T2)this;
     }
 
     /**
      * Set intermediary resources. May be id'd ones or not
      */
-    public EndpointConsumer of(ApiResources resource) {
+    public T2 of(ApiResources resource) {
         return addResourcesAndReturnThis(resource.getResourceName());
     }
 
-    public EndpointConsumer of(String resource) {
+    public T2 of(String resource) {
         return addResourcesAndReturnThis(resource);
     }
 
-    public EndpointConsumer of(ApiResources resource, String id) {
+    public T2 of(ApiResources resource, String id) {
         return addResourcesAndReturnThis(resource.getResourceName(), id);
     }
 
-    public EndpointConsumer of(String resource, String id) {
+    public T2 of(String resource, String id) {
         return addResourcesAndReturnThis(id, resource);
     }
 
-    public EndpointConsumer of(ResourceObject object) {
+    public T2 of(ResourceObject object) {
         return addResourcesAndReturnThis(object.id(), object.object());
     }
 
-    private EndpointConsumer addResourcesAndReturnThis(String... resources) {
+    private T2 addResourcesAndReturnThis(String... resources) {
         for (String resource : resources) {
             this.resources.push(resource);
         }
-        return this;
+        return (T2)this;
     }
 
     /**
      * Closes the endpoint construction and sends the request with parameters
      */
-    public <T extends FieldsOnHash> T withParameters(CanBecomeQueryString parameters) throws IOException, ApiErrors {
+    public T withParameters(CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors, IncompatibleClass {
         StringBuilder urlBuilder = new StringBuilder();
         for (String resource : resources) {
             urlBuilder.append("/");
             urlBuilder.append(resource);
         }
         String url = urlBuilder.toString();
+        HttpResponse response = doRequest(url, parameters, new HashMap<>());
 
-        HttpResponse response;
-        switch (this.action){
-            case GET:
-                response = this.client.get(url, parameters.toQueryString(), new HashMap<>());
-                break;
-
-            case PUT:
-                response = this.client.put(url, parameters.toQueryString(), new HashMap<>());
-                break;
-
-            case POST:
-                response = this.client.post(url, parameters.toQueryString(), new HashMap<>());
-                break;
-
-            case DELETE:
-                response = this.client.delete(url, parameters.toQueryString(), new HashMap<>());
-                break;
-
-            default:
-                break;
+        try {
+            T newInstance = classType.newInstance();
+            newInstance.loadParametersFrom(response.body());
+            return newInstance;
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IncompatibleClass(Messages.INCOMPATIBLE_CLASS_FIELDS_ON_HASH, e);
         }
-        return null;
     }
 
-    public <T extends FieldsOnHash> T withParameters(CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors {
-        StringBuilder urlBuilder = new StringBuilder();
-        for (String resource : resources) {
-            urlBuilder.append("/");
-            urlBuilder.append(resource);
-        }
-        String url = urlBuilder.toString();
-
-        HttpResponse response;
-        switch (this.action){
-            case GET:
-                response = this.client.get(url, parameters.toJson(), new HashMap<>());
-                break;
-
-            case PUT:
-                response = this.client.put(url, parameters.toJson(), new HashMap<>());
-                break;
-
-            case POST:
-                response = this.client.post(url, parameters.toJson(), new HashMap<>());
-                break;
-
-            case DELETE:
-                response = this.client.delete(url, parameters.toJson(), new HashMap<>());
-                break;
-
-            default:
-                break;
-        }
-        return null;
+    public T withNoParameters() throws IOException, ApiErrors, IncompatibleClass {
+        return withParameters(null);
     }
 
-    public <T extends FieldsOnHash> T withNoParameters() throws IOException, ApiErrors {
-
+    public <T extends CanLoadFieldsFromSources> List<T> listWithParameters(CanBecomeKeyValueVariable parameters, Class<T> clazz)
+            throws IOException, ApiErrors, IncompatibleClass {
         String url = buildUrl(this.resources);
+        HttpResponse response = doRequest(url, parameters, new HashMap<>());
 
+        List<T> castedList = new ArrayList<>();
+        List<Map<String, Object>> convertedJsonList = this.converter.stringToMapList(response.body());
+        try {
+            for (Map<String, Object> map : convertedJsonList) {
+                T classInstance = clazz.newInstance();
+                classInstance.loadParametersFrom(map);
+                castedList.add(classInstance);
+            }
+            return castedList;
+        } catch (Exception e) {
+            throw new IncompatibleClass(Messages.INCOMPATIBLE_CLASS_FIELDS_ON_HASH, e);
+        }
+    }
+
+    private HttpResponse doRequest(String url, CanBecomeKeyValueVariable parameters, Map<String, String> headers) throws IOException {
         HttpResponse response;
+        String builtParameters;
         switch (this.action){
-            case GET:
-                response = this.client.get(url, "", new HashMap<>());
-                break;
-
-            case PUT:
-                response = this.client.put(url, "", new HashMap<>());
-                break;
-
             case POST:
-                response = this.client.post(url, "", new HashMap<>());
-                break;
-
             case DELETE:
-                response = this.client.delete(url, "", new HashMap<>());
+            case PUT:
+                builtParameters = parameters.toJson();
                 break;
 
             default:
+                builtParameters = parameters.toQueryString();
                 break;
         }
-        return null;
+        response = this.client.post(url, builtParameters, headers);
+        return response;
     }
 
     private String buildUrl(Stack<String> resources) {

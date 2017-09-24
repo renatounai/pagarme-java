@@ -2,12 +2,12 @@ package me.pagar.router;
 
 import me.pagar.APiConfigurations;
 import me.pagar.ApiClient;
+import me.pagar.endpoint.TransactionEndpoint;
 import me.pagar.exception.ApiErrors;
-import me.pagar.endpoint.ApiResources;
-import me.pagar.endpoint.EndpointConsumer;
+import me.pagar.exception.IncompatibleClass;
 import me.pagar.objecttraits.CanBecomeKeyValueVariable;
-import me.pagar.objecttraits.CanBecomeQueryString;
 import me.pagar.objecttraits.ResourceObject;
+import me.pagar.responseobject.Transaction;
 
 import java.io.IOException;
 
@@ -17,57 +17,55 @@ import java.io.IOException;
 public class TransactionRouter {
 
     private ApiClient client;
+    private TransactionEndpoint baseEndpoint;
 
     public TransactionRouter(ApiClient client) {
         this.client = client;
+        this.baseEndpoint = new TransactionEndpoint(this.client);
     }
 
     public TransactionRouter(APiConfigurations configs) {
-        this.client = new ApiClient(configs);
+        this(new ApiClient(configs));
     }
 
-    public Object create(CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors {
-        return new EndpointConsumer(client)
+    public Transaction create(CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors, IncompatibleClass {
+        return baseEndpoint
             .create()
-            .of(ApiResources.TRANSACTIONS)
             .withParameters(parameters);
     }
 
-    public Object find() throws IOException, ApiErrors {
-        return new EndpointConsumer(client)
+    public Transaction find() throws IOException, ApiErrors, IncompatibleClass {
+        return baseEndpoint
             .find()
-            .of(ApiResources.TRANSACTIONS)
             .withNoParameters();
     }
 
-    public Object find(CanBecomeQueryString... parameters) throws IOException, ApiErrors {
-        return new EndpointConsumer(client)
+    public Transaction find(CanBecomeKeyValueVariable... parameters) throws IOException, ApiErrors, IncompatibleClass {
+        return baseEndpoint
             .find()
-            .of(ApiResources.TRANSACTIONS)
             .withParameters(parameters[0]);
     }
 
-    public Object findById(String id) throws IOException, ApiErrors {
-        return new EndpointConsumer(client)
+    public Object findById(String id) throws IOException, ApiErrors, IncompatibleClass {
+        return baseEndpoint
             .find(id)
-            .of(ApiResources.TRANSACTIONS)
             .withNoParameters();
 
     }
 
-    public Object findById(ResourceObject resource) throws IOException, ApiErrors {
+    public Object findById(ResourceObject resource) throws IOException, ApiErrors, IncompatibleClass {
         return findById(resource.id());
 
     }
 
-    public Object refund(String id, CanBecomeKeyValueVariable... parameters) throws IOException, ApiErrors {
-        return new EndpointConsumer(client)
+    public Object refund(String id, CanBecomeKeyValueVariable... parameters) throws IOException, ApiErrors, IncompatibleClass {
+        return baseEndpoint
             .post("refund")
-            .of(ApiResources.TRANSACTIONS, id)
+            .of(id)
             .withNoParameters();
     }
 
-    public Object refund(ResourceObject resource, CanBecomeKeyValueVariable... parameters) throws IOException, ApiErrors {
+    public Object refund(ResourceObject resource, CanBecomeKeyValueVariable... parameters) throws IOException, ApiErrors, IncompatibleClass {
         return refund(resource.id());
     }
 

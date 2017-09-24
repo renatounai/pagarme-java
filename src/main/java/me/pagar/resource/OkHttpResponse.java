@@ -8,7 +8,7 @@ public class OkHttpResponse implements HttpResponse {
     Map<String, String> headers;
     Integer statusCode;
 
-    public OkHttpResponse(String body, Map<String, String> headers, Integer statusCode){
+    OkHttpResponse(String body, Map<String, String> headers, Integer statusCode){
         this.body = body;
         this.headers = headers;
         this.statusCode = statusCode;

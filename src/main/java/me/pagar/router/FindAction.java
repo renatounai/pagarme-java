@@ -15,9 +15,10 @@ import java.io.IOException;
 class FindAction<T extends FieldsOnHash> {
 
     T execute(ApiClient client, ApiResources resource, CanBecomeKeyValueVariable... parameters) throws IOException, ApiErrors {
-        return new EndpointConsumer(client)
-            .find()
-            .of(resource)
-            .withNoParameters();
+//        return new EndpointConsumer(client)
+//            .find()
+//            .of(resource)
+//            .withNoParameters();
+        return null;
     }
 }

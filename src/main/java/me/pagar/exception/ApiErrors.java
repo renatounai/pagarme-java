@@ -1,8 +1,5 @@
 package me.pagar.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 public class ApiErrors extends Exception {
 
     private Integer statusCode;

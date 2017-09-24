@@ -1,11 +1,12 @@
 package me.pagar.generickeyvalueobject;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import me.pagar.exception.IncompatibleClass;
+import me.pagar.exception.Messages;
 import me.pagar.exception.NoFieldWithName;
 import me.pagar.objecttraits.CanBecomeKeyValueVariable;
 import me.pagar.objecttraits.CanLoadFieldsFromSources;
+import me.pagar.resource.JsonConverter;
+import me.pagar.resource.GsonConverter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,14 +14,32 @@ import java.util.stream.Collectors;
 public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecomeKeyValueVariable {
 
     //String => (number | string | Map)
-    private Map<String, Object> fields = new HashMap<>();
+    private Map<String, Object> fields;
+    private JsonConverter converter;
+
+    public FieldsOnHash(String json, JsonConverter converter) {
+        this.converter = converter;
+        loadParametersFrom(json);
+    }
+
+    public FieldsOnHash(Map<String, Object> parameters, JsonConverter converter) {
+        this.converter = converter;
+        loadParametersFrom(parameters);
+    }
 
     public FieldsOnHash(String jsonString){
+        this.converter = new GsonConverter();
         loadParametersFrom(jsonString);
     }
 
     public FieldsOnHash(Map<String, Object> parameters){
+        this.converter = new GsonConverter();
         loadParametersFrom(parameters);
+    }
+
+    public FieldsOnHash(){
+        this.converter = new GsonConverter();
+        loadParametersFrom(new HashMap<>());
     }
 
     public Map<String, Object> toMap(){
@@ -37,7 +56,7 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
             Integer parameterAsInteger = Integer.valueOf(String.valueOf(parameter));
             return parameterAsInteger;
         } catch (NumberFormatException e) {
-            throw new IncompatibleClass();
+            throw new IncompatibleClass(Messages.INCOMPATIBLE_CLASS_NOT_CONVERTIBLE, e);
         }
     }
 
@@ -60,7 +79,7 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
         String parameterText = String.valueOf(parameter).toLowerCase();
         Boolean parameterIsNotLikeBoolean = !parameterText.equals("true") && !parameter.equals("false");
         if(parameterIsNotLikeBoolean) {
-            throw new IncompatibleClass();
+            throw new IncompatibleClass(Messages.INCOMPATIBLE_CLASS_NOT_CONVERTIBLE);
         }
         Boolean parameterAsBoolean = Boolean.valueOf(parameterText);
         return parameterAsBoolean;
@@ -71,7 +90,7 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
         try {
             return (List<String>) parameter;
         } catch (ClassCastException e) {
-            throw new IncompatibleClass();
+            throw new IncompatibleClass(Messages.INCOMPATIBLE_CLASS_NOT_CONVERTIBLE, e);
         }
     }
 
@@ -91,8 +110,10 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
                 instanciatedObjects.add(objectInstance);
             }
             return instanciatedObjects;
-        } catch (Exception e) {
-            throw new IncompatibleClass();
+        } catch (ClassCastException e) {
+            throw new IncompatibleClass(Messages.INCOMPATIBLE_CLASS_NOT_CONVERTIBLE, e);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IncompatibleClass(Messages.INCOMPATIBLE_CLASS_FIELDS_ON_HASH, e);
         }
 
     }
@@ -112,7 +133,7 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
         try {
             return (Map<String, Object>)parameterValue;
         } catch (ClassCastException e) {
-            throw new IncompatibleClass();
+            throw new IncompatibleClass(Messages.INCOMPATIBLE_CLASS_NOT_CONVERTIBLE, e);
         }
     }
 
@@ -155,15 +176,14 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
     //TODO - parametrize Gson
     @Override
     public void loadParametersFrom(String jsonString) {
-        Map<String, Object> hashedJson = new Gson().fromJson(jsonString, HashMap.class);
+        Map<String, Object> hashedJson = converter.stringToMap(jsonString);
         loadParametersFrom(hashedJson);
     }
 
     //TODO - parametrize Gson
     @Override
     public String toJson(){
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        String jsonString = gson.toJson(this.fields);
+        String jsonString = this.converter.mapToString(this.fields);
         return jsonString;
     }
 
@@ -176,7 +196,7 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
             Object parameterValue = this.fields.get(parameterName);
             return parameterValue;
         } else {
-            throw new NoFieldWithName();
+            throw new NoFieldWithName(Messages.NOFIELDWITHNAME_FIELD_NOT_FOUND_FORMAT(parameterName));
         }
     }
 

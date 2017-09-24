@@ -128,7 +128,7 @@ public class EndpointConsumer<T extends CanLoadFieldsFromSources, T2 extends End
         return withParameters(null);
     }
 
-    public <T extends CanLoadFieldsFromSources> List<T> listWithParameters(CanBecomeKeyValueVariable parameters, Class<T> clazz)
+    public List<T> listWithParameters(CanBecomeKeyValueVariable parameters)
             throws IOException, ApiErrors, IncompatibleClass {
         String url = buildUrl(this.resources);
         HttpResponse response = doRequest(url, parameters, new HashMap<>());
@@ -137,12 +137,12 @@ public class EndpointConsumer<T extends CanLoadFieldsFromSources, T2 extends End
         List<Map<String, Object>> convertedJsonList = this.converter.stringToMapList(response.body());
         try {
             for (Map<String, Object> map : convertedJsonList) {
-                T classInstance = clazz.newInstance();
+                T classInstance = this.classType.newInstance();
                 classInstance.loadParametersFrom(map);
                 castedList.add(classInstance);
             }
             return castedList;
-        } catch (Exception e) {
+        } catch (IllegalAccessException | InstantiationException e) {
             throw new IncompatibleClass(Messages.INCOMPATIBLE_CLASS_FIELDS_ON_HASH, e);
         }
     }

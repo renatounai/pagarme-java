@@ -37,7 +37,8 @@ public class Wrapper {
             "item",
             "postback",
             "shipping",
-            "transactions").forEach((resource) -> {
+            "transactions",
+            "phone").forEach((resource) -> {
 
             ClassLoader classLoader = getClass().getClassLoader();
             Enumeration<URL> responseSchemaUrls = null;

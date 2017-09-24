@@ -10,6 +10,7 @@ import me.pagar.objecttraits.ResourceObject;
 import me.pagar.responseobject.Transaction;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Existing routes sugar
@@ -40,10 +41,10 @@ public class TransactionRouter {
             .withNoParameters();
     }
 
-    public Transaction find(CanBecomeKeyValueVariable... parameters) throws IOException, ApiErrors, IncompatibleClass {
+    public List<Transaction> find(CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors, IncompatibleClass {
         return baseEndpoint
             .find()
-            .withParameters(parameters[0]);
+            .listWithParameters(parameters);
     }
 
     public Object findById(String id) throws IOException, ApiErrors, IncompatibleClass {
@@ -55,7 +56,6 @@ public class TransactionRouter {
 
     public Object findById(ResourceObject resource) throws IOException, ApiErrors, IncompatibleClass {
         return findById(resource.id());
-
     }
 
     public Object refund(String id, CanBecomeKeyValueVariable... parameters) throws IOException, ApiErrors, IncompatibleClass {

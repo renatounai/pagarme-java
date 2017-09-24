@@ -7,6 +7,9 @@
     <groupId>me.pagar</groupId>
     <artifactId>pagarme-java</artifactId>
     <version>2.0.0</version>
+    <modules>
+        <module>codegenerator</module>
+    </modules>
     <name>pagarme-java</name>
     <description>Pagar.me Java Bindings</description>
     <url>https://github.com/pagarme/pagarme-java</url>
@@ -26,7 +29,7 @@
             <email>lucas.santos@pagar.me</email>
         </developer>
     </developers>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <licenses>
         <license>
             <name>The MIT License (MIT)</name>
@@ -192,7 +195,6 @@
                         </goals>
                         <configuration>
                             <mainClass>codegeneration.CreatePojos</mainClass>
-                            <classpathScope>runtime</classpathScope>
                         </configuration>
                     </execution>
                 </executions>

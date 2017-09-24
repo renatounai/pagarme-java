@@ -27,8 +27,8 @@ public class CreatePojos {
             String newClassName = json.get("_class_").getAsString();
             String packageName = json.get("_package_").getAsString();
 
-            ClassName fieldsOnHash = ClassName.get(parentPackage(packageName), "FieldsOnHash");
-            ClassName resourceObject = ClassName.get("me.pagar.objecttrait", "ResourceObject");
+            ClassName fieldsOnHash = ClassName.get("me.pagar.generickeyvalueobject", "FieldsOnHash");
+            ClassName resourceObject = ClassName.get("me.pagar.objecttraits", "ResourceObject");
 
             ClassName referencedClassName = ClassName.get(packageName, newClassName);
             TypeSpec.Builder classBuilder = TypeSpec.classBuilder(newClassName)

@@ -4,6 +4,7 @@ import me.pagar.ApiClient;
 import me.pagar.exception.ApiErrors;
 import me.pagar.exception.IncompatibleClass;
 import me.pagar.exception.Messages;
+import me.pagar.generickeyvalueobject.EmptyFieldsOnHash;
 import me.pagar.objecttraits.CanBecomeKeyValueVariable;
 import me.pagar.objecttraits.CanLoadFieldsFromSources;
 import me.pagar.objecttraits.ResourceObject;
@@ -22,7 +23,7 @@ public class EndpointConsumer<T extends CanLoadFieldsFromSources, T2 extends End
 
     private ApiClient client;
     private Action action = Action.GET;
-    private Stack<String> resources;
+    private LinkedList<String> resources;
     private JsonConverter converter;
     private Class<T> classType;
 
@@ -31,7 +32,7 @@ public class EndpointConsumer<T extends CanLoadFieldsFromSources, T2 extends End
         this.client = client;
         this.converter = converter;
         this.classType = classType;
-        resources = new Stack<>();
+        resources = new LinkedList<>();
     }
 
     public EndpointConsumer(ApiClient client, Class<T> classType) {
@@ -46,22 +47,16 @@ public class EndpointConsumer<T extends CanLoadFieldsFromSources, T2 extends End
         return setActionAndReturnThis(Action.POST);
     }
 
+    public T2 post() {
+        return setActionAndReturnThis(Action.POST);
+    }
+
     public T2 delete() {
         return setActionAndReturnThis(Action.DELETE);
     }
 
     public T2 update() {
         return setActionAndReturnThis(Action.PUT);
-    }
-
-    public T2 post(String action) {
-        this.resources.push(action);
-        return setActionAndReturnThis(Action.POST);
-    }
-
-    public T2 find(String id) {
-        this.resources.add(id);
-        return setActionAndReturnThis(Action.GET);
     }
 
     public T2 find() {
@@ -76,29 +71,36 @@ public class EndpointConsumer<T extends CanLoadFieldsFromSources, T2 extends End
     /**
      * Set intermediary resources. May be id'd ones or not
      */
-    public T2 of(ApiResources resource) {
-        return addResourcesAndReturnThis(resource.getResourceName());
+    public T2 thatHas(ApiResources resource) {
+        return pushResourcesAndReturnThis(resource.getResourceName());
     }
 
-    public T2 of(String resource) {
-        return addResourcesAndReturnThis(resource);
+    public T2 thatHas(String resource) {
+        return pushResourcesAndReturnThis(resource);
     }
 
-    public T2 of(ApiResources resource, String id) {
-        return addResourcesAndReturnThis(resource.getResourceName(), id);
+    public T2 thatHas(ApiResources resource, String id) {
+        return pushResourcesAndReturnThis(resource.getResourceName(), id);
     }
 
-    public T2 of(String resource, String id) {
-        return addResourcesAndReturnThis(id, resource);
+    public T2 thatHas(String resource, String id) {
+        return pushResourcesAndReturnThis(id, resource);
     }
 
-    public T2 of(ResourceObject object) {
-        return addResourcesAndReturnThis(object.id(), object.object());
+    public T2 thatHas(ResourceObject object) {
+        return pushResourcesAndReturnThis(object.id(), object.object());
     }
 
-    private T2 addResourcesAndReturnThis(String... resources) {
+    private T2 pushResourcesAndReturnThis(String... resources) {
         for (String resource : resources) {
-            this.resources.push(resource);
+            this.resources.add(resource);
+        }
+        return (T2)this;
+    }
+
+    private T2 prependResourcesAndReturnThis(String... resources) {
+        for (String resource : resources) {
+            this.resources.add(0, resource);
         }
         return (T2)this;
     }
@@ -107,12 +109,7 @@ public class EndpointConsumer<T extends CanLoadFieldsFromSources, T2 extends End
      * Closes the endpoint construction and sends the request with parameters
      */
     public T withParameters(CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors, IncompatibleClass {
-        StringBuilder urlBuilder = new StringBuilder();
-        for (String resource : resources) {
-            urlBuilder.append("/");
-            urlBuilder.append(resource);
-        }
-        String url = urlBuilder.toString();
+        String url = buildUrl(this.resources);
         HttpResponse response = doRequest(url, parameters, new HashMap<>());
 
         try {
@@ -125,7 +122,7 @@ public class EndpointConsumer<T extends CanLoadFieldsFromSources, T2 extends End
     }
 
     public T withNoParameters() throws IOException, ApiErrors, IncompatibleClass {
-        return withParameters(null);
+        return withParameters(new EmptyFieldsOnHash());
     }
 
     public List<T> listWithParameters(CanBecomeKeyValueVariable parameters)
@@ -147,28 +144,36 @@ public class EndpointConsumer<T extends CanLoadFieldsFromSources, T2 extends End
         }
     }
 
-    private HttpResponse doRequest(String url, CanBecomeKeyValueVariable parameters, Map<String, String> headers) throws IOException {
+    private HttpResponse doRequest(String url, CanBecomeKeyValueVariable parameters, Map<String, String> headers) throws IOException, ApiErrors {
         HttpResponse response;
         String builtParameters;
         switch (this.action){
             case POST:
+                response = this.client.post(url, parameters.toJson(), headers);
+                break;
+
             case DELETE:
+                response = this.client.delete(url, parameters.toJson(), headers);
+                break;
+
             case PUT:
-                builtParameters = parameters.toJson();
+                response = this.client.put(url, parameters.toJson(), headers);
                 break;
 
             default:
-                builtParameters = parameters.toQueryString();
+                response = this.client.get(url, parameters.toQueryString(), headers);
                 break;
         }
-        response = this.client.post(url, builtParameters, headers);
+        if(response.statusCode() > 299) {
+            throw new ApiErrors(response.statusCode(), url, this.action.toString(), response.body());
+        }
         return response;
     }
 
-    private String buildUrl(Stack<String> resources) {
+    private String buildUrl(List<String> resources) {
         StringBuilder urlBuilder = new StringBuilder();
-        while(!resources.empty()) {
-            String resource = resources.pop();
+        while(!resources.isEmpty()) {
+            String resource = resources.remove(0);
             urlBuilder.append("/");
             urlBuilder.append(resource);
         }

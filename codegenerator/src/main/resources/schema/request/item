@@ -2,6 +2,7 @@
   "_package_": "me.pagar.requestobject",
   "_class_": "Item",
   "properties": {
+  "id": "String",
     "id": "String",
     "title": "String",
     "unit_price": "Integer",

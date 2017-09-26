@@ -2,6 +2,7 @@
   "_package_": "me.pagar.requestobject",
   "_class_": "Address",
   "properties": {
+    "id": "String",
     "street": "String",
     "street_number": "String",
     "neighborhood": "String",

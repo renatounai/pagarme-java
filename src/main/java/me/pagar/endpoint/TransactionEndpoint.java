@@ -9,10 +9,12 @@ public class TransactionEndpoint extends EndpointConsumer<Transaction, Transacti
 
     public TransactionEndpoint(ApiClient client, JsonConverter converter) {
         super(client, converter, Transaction.class);
+        thatHas(ApiResources.TRANSACTIONS);
     }
 
     public TransactionEndpoint(ApiClient client) {
         super(client, new GsonConverter(), Transaction.class);
+        thatHas(ApiResources.TRANSACTIONS);
     }
 
 }

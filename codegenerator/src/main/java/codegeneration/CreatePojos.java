@@ -53,6 +53,15 @@ public class CreatePojos {
                     .build()
                 );
 
+            //Make object() method for requests
+            if(packageName.contains("request")) {
+                MethodSpec objectMethod = MethodSpec.methodBuilder("object")
+                        .addModifiers(Modifier.PUBLIC)
+                        .returns(String.class)
+                        .addStatement("return \"" + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, newClassName) + "\"")
+                        .build();
+                classBuilder.addMethod(objectMethod);
+            }
 
             json.get("properties").getAsJsonObject().entrySet().forEach(((entry) -> {
 
@@ -60,6 +69,7 @@ public class CreatePojos {
                 String entryValue = entry.getValue().getAsString();
 
                 String superClassMethodName = "getParameterAsString";
+                String superClassSetMethodName = "setParameter";
                 if(entryValue.contains("List")){
                     String pojoName = entryValue.replace("List<", "").replace(">", "");
                     if(!boxedClassesNames.contains(pojoName)){
@@ -93,6 +103,7 @@ public class CreatePojos {
                         case "List<String>":
                             propertyName = ParameterizedTypeName.get(listClassName, stringClassName);
                             superClassMethodName = "getParameterAsStringList";
+                            superClassSetMethodName = "setParameterCollection";
                             break;
 
                         default:
@@ -125,7 +136,7 @@ public class CreatePojos {
                         .returns(referencedClassName)
                         .addParameter(String.class, "parameterName")
                         .addParameter(propertyName, "parameterValue")
-                        .addStatement("super.setParameter(parameterValue)")
+                        .addStatement("super." + superClassSetMethodName + "(parameterName, parameterValue)")
                         .addStatement("return this")
                         .build();
                     classBuilder.addMethod(setMethod);

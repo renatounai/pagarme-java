@@ -60,6 +60,13 @@ public class TransactionTest {
                     .withStatus(200)
                 )
         );
+        wireMockRule.stubFor(
+            post(urlPathEqualTo("/transactions/tx_id/refund"))
+                .willReturn(aResponse()
+                    .withBody("{}")
+                    .withStatus(200)
+                )
+        );
     }
 
     @Test
@@ -103,6 +110,18 @@ public class TransactionTest {
         wireMockRule.verify(1, getRequestedFor(urlMatching("/transactions.*"))
             .withBasicAuth(new BasicCredentials(configs.apiKey, "x"))
             .withQueryParam("key", equalTo("value"))
+        );
+    }
+
+    @Test
+    public void testTransactionRefund() throws IOException, ApiErrors {
+        FieldsOnHash parameters = new FieldsOnHashImpl("{\"amount\": \"1000\"}");
+        new TransactionRouter(client)
+            .refund("tx_id", parameters);
+
+        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/transactions/tx_id/refund"))
+            .withBasicAuth(new BasicCredentials(configs.apiKey, "x"))
+            .withRequestBody(matchingJsonPath("amount", equalTo("1000")))
         );
     }
 }

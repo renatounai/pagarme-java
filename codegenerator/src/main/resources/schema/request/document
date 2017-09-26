@@ -2,6 +2,7 @@
   "_package_": "me.pagar.requestobject",
   "_class_": "Document",
   "properties": {
+  "id": "String",
     "type": "String",
     "number": "String"
   }

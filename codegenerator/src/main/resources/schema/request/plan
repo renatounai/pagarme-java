@@ -2,6 +2,7 @@
   "_package_": "me.pagar.requestobject",
   "_class_": "Plan",
   "properties": {
+  "id": "String",
     "amount": "Integer",
     "days": "Integer",
     "name": "String",

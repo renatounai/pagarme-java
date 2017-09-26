@@ -2,6 +2,7 @@
   "_package_": "me.pagar.requestobject",
   "_class_": "Recipient",
   "properties": {
+  "id": "String",
     "transfer_enabled": "Boolean",
     "last_transfer": "String",
     "transfer_interval": "Integer",

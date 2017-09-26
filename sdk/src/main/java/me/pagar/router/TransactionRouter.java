@@ -2,13 +2,9 @@ package me.pagar.router;
 
 import me.pagar.APiConfigurations;
 import me.pagar.ApiClient;
-import me.pagar.endpoint.ApiResources;
-import me.pagar.endpoint.TransactionEndpoint;
+import me.pagar.endpoint.EndpointConsumer;
 import me.pagar.exception.ApiErrors;
-import me.pagar.exception.IncompatibleClass;
 import me.pagar.objecttraits.CanBecomeKeyValueVariable;
-import me.pagar.objecttraits.ResourceObject;
-import me.pagar.responseobject.CardHashKey;
 import me.pagar.responseobject.Transaction;
 
 import java.io.IOException;
@@ -20,36 +16,37 @@ import java.util.List;
 public class TransactionRouter {
 
     private ApiClient client;
-    private TransactionEndpoint baseEndpoint;
+    private EndpointConsumer<Transaction> baseEndpoint;
 
     public TransactionRouter(ApiClient client) {
         this.client = client;
-        this.baseEndpoint = new TransactionEndpoint(this.client);
+        this.baseEndpoint = new EndpointConsumer<Transaction>(this.client, Transaction.class);
     }
 
     public TransactionRouter(APiConfigurations configs) {
         this(new ApiClient(configs));
     }
 
-    public Transaction create(CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors, IncompatibleClass {
-        return baseEndpoint
-            .create()
-            .withParameters(parameters);
+    public Transaction create(CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors {
+        Transaction t = baseEndpoint
+                .create()
+                .withParameters(parameters);
+        return
     }
 
-    public Transaction find() throws IOException, ApiErrors, IncompatibleClass {
+    public Transaction find() throws IOException, ApiErrors {
         return baseEndpoint
             .find()
             .withNoParameters();
     }
 
-    public List<Transaction> find(CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors, IncompatibleClass {
+    public List<Transaction> find(CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors {
         return baseEndpoint
             .find()
             .listWithParameters(parameters);
     }
 
-    public Transaction findById(String id) throws IOException, ApiErrors, IncompatibleClass {
+    public Transaction findById(String id) throws IOException, ApiErrors {
         return baseEndpoint
             .thatHas(id)
             .find()
@@ -57,7 +54,7 @@ public class TransactionRouter {
 
     }
 
-    public Transaction refund(String id, CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors, IncompatibleClass {
+    public Transaction refund(String id, CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors {
         return baseEndpoint
             .thatHas(id)
             .thatHas("refund")
@@ -65,7 +62,7 @@ public class TransactionRouter {
             .withParameters(parameters);
     }
 
-    public Transaction capture(String id, CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors, IncompatibleClass {
+    public Transaction capture(String id, CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors {
         return baseEndpoint
             .thatHas(id)
             .thatHas("capture")
@@ -73,7 +70,7 @@ public class TransactionRouter {
             .withParameters(parameters);
     }
 
-    public Transaction collectPayment(String id, CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors, IncompatibleClass {
+    public Transaction collectPayment(String id, CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors {
         return baseEndpoint
             .thatHas(id)
             .thatHas("collect_payment")
@@ -81,7 +78,7 @@ public class TransactionRouter {
             .withParameters(parameters);
     }
 
-    public Transaction payBoleto(String id, CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors, IncompatibleClass {
+    public Transaction payBoleto(String id, CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors {
         return baseEndpoint
             .thatHas(id)
             .thatHas("collect_payment")

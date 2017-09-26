@@ -268,9 +268,7 @@ public class FieldsOnHashTest {
             "stringList[0]=1", "stringList[1]=2", "booleanString=true");
 
         Assert.assertEquals(expectedParameters.size(), actualParameters.size());
-        for (String expectedValue : expectedParameters) {
-            Assert.assertTrue(actualParameters.contains(expectedValue));
-        }
+        Assert.assertTrue(actualParameters.containsAll(expectedParameters));
     }
 
 }

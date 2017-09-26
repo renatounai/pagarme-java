@@ -19,7 +19,7 @@ import java.util.*;
  * Resolves endpoint building and calling
  * Resolves possible parsings and middleware stuff after request
  */
-public class EndpointConsumer<T extends CanLoadFieldsFromSources, T2 extends EndpointConsumer> {
+public class EndpointConsumer<T extends CanLoadFieldsFromSources> {
 
     private ApiClient client;
     private Action action = Action.GET;
@@ -43,66 +43,66 @@ public class EndpointConsumer<T extends CanLoadFieldsFromSources, T2 extends End
      * Set action.
      * Resolves urls ending with special ending actions - calculate_installments, refund, collect_payment, etc
      */
-    public T2 create() {
+    public EndpointConsumer create() {
         return setActionAndReturnThis(Action.POST);
     }
 
-    public T2 post() {
+    public EndpointConsumer post() {
         return setActionAndReturnThis(Action.POST);
     }
 
-    public T2 delete() {
+    public EndpointConsumer delete() {
         return setActionAndReturnThis(Action.DELETE);
     }
 
-    public T2 update() {
+    public EndpointConsumer update() {
         return setActionAndReturnThis(Action.PUT);
     }
 
-    public T2 find() {
+    public EndpointConsumer find() {
         return setActionAndReturnThis(Action.GET);
     }
 
-    private T2 setActionAndReturnThis(Action action) {
+    private EndpointConsumer setActionAndReturnThis(Action action) {
         this.action = action;
-        return (T2)this;
+        return this;
     }
 
     /**
      * Set intermediary resources. May be id'd ones or not
      */
-    public T2 thatHas(ApiResources resource) {
+    public EndpointConsumer thatHas(ApiResources resource) {
         return pushResourcesAndReturnThis(resource.getResourceName());
     }
 
-    public T2 thatHas(String resource) {
+    public EndpointConsumer thatHas(String resource) {
         return pushResourcesAndReturnThis(resource);
     }
 
-    public T2 thatHas(ApiResources resource, String id) {
+    public EndpointConsumer thatHas(ApiResources resource, String id) {
         return pushResourcesAndReturnThis(resource.getResourceName(), id);
     }
 
-    public T2 thatHas(String resource, String id) {
+    public EndpointConsumer thatHas(String resource, String id) {
         return pushResourcesAndReturnThis(id, resource);
     }
 
-    public T2 thatHas(ResourceObject object) {
+    public EndpointConsumer thatHas(ResourceObject object) {
         return pushResourcesAndReturnThis(object.id(), object.object());
     }
 
-    private T2 pushResourcesAndReturnThis(String... resources) {
+    private EndpointConsumer pushResourcesAndReturnThis(String... resources) {
         for (String resource : resources) {
             this.resources.add(resource);
         }
-        return (T2)this;
+        return this;
     }
 
-    private T2 prependResourcesAndReturnThis(String... resources) {
+    private EndpointConsumer prependResourcesAndReturnThis(String... resources) {
         for (String resource : resources) {
             this.resources.add(0, resource);
         }
-        return (T2)this;
+        return this;
     }
 
     /**

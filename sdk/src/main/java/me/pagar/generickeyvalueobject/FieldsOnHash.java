@@ -159,9 +159,11 @@ public abstract class FieldsOnHash implements CanLoadFieldsFromSources, CanBecom
     }
 
     public <T extends CanBecomeKeyValueVariable> void setParameter(String parameterName, Collection<T> list) {
+        List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         for (T item : list) {
-            this.fields.put(parameterName, item.toMap());
+            mapList.add(item.toMap());
         }
+        this.fields.put(parameterName, mapList);
     }
 
     public void setParameterCollection(String parameterName, Collection<String> collection) {

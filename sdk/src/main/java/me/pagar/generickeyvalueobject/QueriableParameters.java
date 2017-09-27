@@ -77,7 +77,7 @@ public class QueriableParameters implements CanBecomeQueryString {
     }
 
     public void moreThanOrEquals(String parameterName, String parameterValue) {
-        addAndStringifyNull(parameterName, "=>" + parameterValue);
+        addAndStringifyNull(parameterName, ">=" + parameterValue);
     }
 
     private void addAndStringifyNull(String parameterName, Object parameterValue) {

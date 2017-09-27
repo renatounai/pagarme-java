@@ -2,6 +2,7 @@ package me.pagar.router;
 
 import me.pagar.APiConfigurations;
 import me.pagar.ApiClient;
+import me.pagar.endpoint.ApiResources;
 import me.pagar.endpoint.EndpointConsumer;
 import me.pagar.exception.ApiErrors;
 import me.pagar.objecttraits.CanBecomeKeyValueVariable;
@@ -20,7 +21,8 @@ public class TransactionRouter {
 
     public TransactionRouter(ApiClient client) {
         this.client = client;
-        this.baseEndpoint = new EndpointConsumer<Transaction>(this.client, Transaction.class);
+        this.baseEndpoint = new EndpointConsumer<Transaction>(this.client, Transaction.class)
+            .thatHas(ApiResources.TRANSACTIONS);
     }
 
     public TransactionRouter(APiConfigurations configs) {
@@ -28,10 +30,9 @@ public class TransactionRouter {
     }
 
     public Transaction create(CanBecomeKeyValueVariable parameters) throws IOException, ApiErrors {
-        Transaction t = baseEndpoint
-                .create()
-                .withParameters(parameters);
-        return
+        return baseEndpoint
+            .create()
+            .withParameters(parameters);
     }
 
     public Transaction find() throws IOException, ApiErrors {

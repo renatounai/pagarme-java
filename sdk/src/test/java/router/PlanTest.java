@@ -34,42 +34,6 @@ public class PlanTest {
 
         ApiClient client = new ApiClient(configs);
         this.client = client;
-
-        wireMockRule.stubFor(
-                get(urlPathEqualTo("/plans/tx_1"))
-                        .willReturn(aResponse()
-                                .withBody("{}")
-                                .withStatus(200)
-                        )
-        );
-        wireMockRule.stubFor(
-                get(urlPathEqualTo("/plans"))
-                        .willReturn(aResponse()
-                                .withBody("[]")
-                                .withStatus(200)
-                        )
-        );
-        wireMockRule.stubFor(
-                get(urlPathMatching("/plans?(.+=.+)+"))
-                        .willReturn(aResponse()
-                                .withBody("[]")
-                                .withStatus(200)
-                        )
-        );
-        wireMockRule.stubFor(
-                post(urlPathEqualTo("/plans"))
-                        .willReturn(aResponse()
-                                .withBody("{}")
-                                .withStatus(200)
-                        )
-        );
-        wireMockRule.stubFor(
-                put(urlPathEqualTo("/plans/tx_id"))
-                        .willReturn(aResponse()
-                                .withBody("{}")
-                                .withStatus(200)
-                        )
-        );
     }
 
     @Test

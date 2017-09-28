@@ -1,7 +1,7 @@
 {
   "request" : {
     "method" : "GET",
-    "urlPattern" : "/customers/[^/]+",
+    "urlPattern" : "/plans(?:\\?.+|)",
     "basicAuthCredentials" : {
       "username" : "API KEY",
       "password" : "x"
@@ -9,7 +9,7 @@
   },
   "response" : {
     "status" : 200,
-    "jsonBody" : {},
+    "jsonBody" : [],
     "headers" : {
       "Content-Type" : "application/json"
     }

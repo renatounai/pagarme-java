@@ -1,7 +1,7 @@
 {
   "request" : {
-    "method" : "POST",
-    "urlPattern" : "/plans",
+    "method" : "PUT",
+    "urlPattern" : "/subscriptions/[^/]+",
     "basicAuthCredentials" : {
       "username" : "API KEY",
       "password" : "x"

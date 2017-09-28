@@ -32,42 +32,6 @@ public class TransactionTest {
 
         ApiClient client = new ApiClient(configs);
         this.client = client;
-
-        wireMockRule.stubFor(
-            get(urlPathEqualTo("/transactions/tx_1"))
-                .willReturn(aResponse()
-                    .withBody("{}")
-                    .withStatus(200)
-                )
-        );
-        wireMockRule.stubFor(
-            get(urlPathEqualTo("/transactions"))
-                .willReturn(aResponse()
-                    .withBody("[]")
-                    .withStatus(200)
-                )
-        );
-        wireMockRule.stubFor(
-            get(urlPathMatching("/transactions?(.+=.+)+"))
-                .willReturn(aResponse()
-                    .withBody("[]")
-                    .withStatus(200)
-                )
-        );
-        wireMockRule.stubFor(
-            post(urlPathEqualTo("/transactions"))
-                .willReturn(aResponse()
-                    .withBody("{}")
-                    .withStatus(200)
-                )
-        );
-        wireMockRule.stubFor(
-            post(urlPathEqualTo("/transactions/tx_id/refund"))
-                .willReturn(aResponse()
-                    .withBody("{}")
-                    .withStatus(200)
-                )
-        );
     }
 
     @Test

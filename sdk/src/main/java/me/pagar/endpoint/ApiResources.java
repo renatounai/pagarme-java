@@ -10,6 +10,7 @@ public enum ApiResources {
     REFUNDS("refund"),
     SPLIT_RULES("split_rules"),
     CARDS("cards"),
+    CUSTOMERS("customers"),
     PLANS("plans");
 
     private String resourceName;

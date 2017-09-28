@@ -1,4 +1,4 @@
-package unit;
+package router;
 
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -10,6 +10,7 @@ import me.pagar.router.TransactionRouter;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import unit.FieldsOnHashImpl;
 
 import java.io.IOException;
 

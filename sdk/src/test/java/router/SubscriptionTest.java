@@ -1,4 +1,4 @@
-package unit;
+package router;
 
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -6,10 +6,11 @@ import me.pagar.APiConfigurations;
 import me.pagar.ApiClient;
 import me.pagar.exception.ApiErrors;
 import me.pagar.generickeyvalueobject.FieldsOnHash;
-import me.pagar.router.PlanRouter;
+import me.pagar.router.SubscriptionRouter;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import unit.FieldsOnHashImpl;
 
 import java.io.IOException;
 
@@ -17,7 +18,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
 
-public class PlanTest {
+public class SubscriptionTest {
 
     ApiClient client;
     APiConfigurations configs;
@@ -35,35 +36,42 @@ public class PlanTest {
         this.client = client;
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo("/plans/tx_1"))
+                get(urlPathEqualTo("/subscriptions/tx_1"))
                         .willReturn(aResponse()
                                 .withBody("{}")
                                 .withStatus(200)
                         )
         );
         wireMockRule.stubFor(
-                get(urlPathEqualTo("/plans"))
+                get(urlPathEqualTo("/subscriptions"))
                         .willReturn(aResponse()
                                 .withBody("[]")
                                 .withStatus(200)
                         )
         );
         wireMockRule.stubFor(
-                get(urlPathMatching("/plans?(.+=.+)+"))
+                get(urlPathMatching("/subscriptions?(.+=.+)+"))
                         .willReturn(aResponse()
                                 .withBody("[]")
                                 .withStatus(200)
                         )
         );
         wireMockRule.stubFor(
-                post(urlPathEqualTo("/plans"))
+                post(urlPathEqualTo("/subscriptions"))
                         .willReturn(aResponse()
                                 .withBody("{}")
                                 .withStatus(200)
                         )
         );
         wireMockRule.stubFor(
-                put(urlPathEqualTo("/plans/tx_id"))
+                post(urlPathEqualTo("/subscriptions/tx_id/cancel"))
+                        .willReturn(aResponse()
+                                .withBody("{}")
+                                .withStatus(200)
+                        )
+        );
+        wireMockRule.stubFor(
+                post(urlPathEqualTo("/subscriptions/tx_id/settle_charge"))
                         .willReturn(aResponse()
                                 .withBody("{}")
                                 .withStatus(200)
@@ -72,58 +80,68 @@ public class PlanTest {
     }
 
     @Test
-    public void testPlanCreate() throws IOException, ApiErrors {
+    public void testSubscriptionCreate() throws IOException, ApiErrors {
         FieldsOnHash parameters = new FieldsOnHashImpl("{\"key\": \"value\"}");
-        new PlanRouter(client)
+        new SubscriptionRouter(client)
                 .create(parameters);
 
-        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/plans"))
+        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/subscriptions"))
                 .withBasicAuth(new BasicCredentials(configs.apiKey, "x"))
                 .withRequestBody(equalToJson("{\"key\": \"value\"}"))
         );
     }
 
     @Test
-    public void testPlanFindById() throws IOException, ApiErrors {
-        new PlanRouter(client)
+    public void testSubscriptionFindById() throws IOException, ApiErrors {
+        new SubscriptionRouter(client)
                 .findById("tx_1");
 
-        wireMockRule.verify(1, getRequestedFor(urlEqualTo("/plans/tx_1"))
+        wireMockRule.verify(1, getRequestedFor(urlEqualTo("/subscriptions/tx_1"))
                 .withBasicAuth(new BasicCredentials(configs.apiKey, "x"))
         );
     }
 
     @Test
-    public void testPlanFind() throws IOException, ApiErrors {
-        new PlanRouter(client)
+    public void testSubscriptionFind() throws IOException, ApiErrors {
+        new SubscriptionRouter(client)
                 .find();
 
-        wireMockRule.verify(1, getRequestedFor(urlEqualTo("/plans"))
+        wireMockRule.verify(1, getRequestedFor(urlEqualTo("/subscriptions"))
                 .withBasicAuth(new BasicCredentials(configs.apiKey, "x"))
         );
     }
 
     @Test
-    public void testPlanFindWithParameters() throws IOException, ApiErrors {
+    public void testSubscriptionFindWithParameters() throws IOException, ApiErrors {
         FieldsOnHash parameters = new FieldsOnHashImpl("{\"key\": \"value\"}");
-        new PlanRouter(client)
+        new SubscriptionRouter(client)
                 .find(parameters);
 
-        wireMockRule.verify(1, getRequestedFor(urlMatching("/plans.*"))
+        wireMockRule.verify(1, getRequestedFor(urlMatching("/subscriptions.*"))
                 .withBasicAuth(new BasicCredentials(configs.apiKey, "x"))
                 .withQueryParam("key", equalTo("value"))
         );
     }
 
     @Test
-    public void testPlanUpdate() throws IOException, ApiErrors {
-        FieldsOnHash parameters = new FieldsOnHashImpl("{\"amount\": \"1000\"}");
-        new PlanRouter(client)
-                .update("tx_id", parameters);
+    public void testSubscriptionCancel() throws IOException, ApiErrors {
+        new SubscriptionRouter(client)
+                .cancel("tx_id");
 
-        wireMockRule.verify(1, putRequestedFor(urlEqualTo("/plans/tx_id"))
+        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/subscriptions/tx_id/cancel"))
                 .withBasicAuth(new BasicCredentials(configs.apiKey, "x"))
-                .withRequestBody(matchingJsonPath("amount", equalTo("1000")))
+        );
+    }
+
+    @Test
+    public void testSubscriptionSettleCharges() throws IOException, ApiErrors {
+        FieldsOnHash parameters = new FieldsOnHashImpl("{\"charges\": \"2\"}");
+        new SubscriptionRouter(client)
+                .settleCharges("tx_id", parameters);
+
+        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/subscriptions/tx_id/settle_charge"))
+                .withBasicAuth(new BasicCredentials(configs.apiKey, "x"))
+                .withRequestBody(matchingJsonPath("charges", equalTo("2")))
         );
     }
 }

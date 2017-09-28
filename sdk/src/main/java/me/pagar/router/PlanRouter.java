@@ -7,7 +7,6 @@ import me.pagar.endpoint.EndpointConsumer;
 import me.pagar.exception.ApiErrors;
 import me.pagar.objecttraits.CanBecomeKeyValueVariable;
 import me.pagar.responseobject.Plan;
-import me.pagar.responseobject.Transaction;
 
 import java.io.IOException;
 import java.util.List;

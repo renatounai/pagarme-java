@@ -1,0 +1,17 @@
+{
+  "request" : {
+    "method" : "GET",
+    "urlPattern" : "/bank_accounts/[^/]+",
+    "basicAuthCredentials" : {
+      "username" : "API KEY",
+      "password" : "x"
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "jsonBody" : {},
+    "headers" : {
+      "Content-Type" : "application/json"
+    }
+  }
+}

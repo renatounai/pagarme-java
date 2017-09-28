@@ -33,35 +33,6 @@ public class BankAccountTest {
 
         ApiClient client = new ApiClient(configs);
         this.client = client;
-
-        wireMockRule.stubFor(
-                get(urlPathEqualTo("/bank_accounts/tx_1"))
-                        .willReturn(aResponse()
-                                .withBody("{}")
-                                .withStatus(200)
-                        )
-        );
-        wireMockRule.stubFor(
-                get(urlPathEqualTo("/bank_accounts"))
-                        .willReturn(aResponse()
-                                .withBody("[]")
-                                .withStatus(200)
-                        )
-        );
-        wireMockRule.stubFor(
-                get(urlPathMatching("/bank_accounts?(.+=.+)+"))
-                        .willReturn(aResponse()
-                                .withBody("[]")
-                                .withStatus(200)
-                        )
-        );
-        wireMockRule.stubFor(
-                post(urlPathMatching("/bank_accounts"))
-                        .willReturn(aResponse()
-                                .withBody("{}")
-                                .withStatus(200)
-                        )
-        );
     }
 
     @Test

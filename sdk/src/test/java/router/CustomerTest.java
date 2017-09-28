@@ -33,35 +33,6 @@ public class CustomerTest {
 
         ApiClient client = new ApiClient(configs);
         this.client = client;
-
-        wireMockRule.stubFor(
-                get(urlPathEqualTo("/customers/tx_1"))
-                        .willReturn(aResponse()
-                                .withBody("{}")
-                                .withStatus(200)
-                        )
-        );
-        wireMockRule.stubFor(
-                get(urlPathEqualTo("/customers"))
-                        .willReturn(aResponse()
-                                .withBody("[]")
-                                .withStatus(200)
-                        )
-        );
-        wireMockRule.stubFor(
-                get(urlPathMatching("/customers?(.+=.+)+"))
-                        .willReturn(aResponse()
-                                .withBody("[]")
-                                .withStatus(200)
-                        )
-        );
-        wireMockRule.stubFor(
-                post(urlPathMatching("/customers"))
-                        .willReturn(aResponse()
-                                .withBody("{}")
-                                .withStatus(200)
-                        )
-        );
     }
 
     @Test

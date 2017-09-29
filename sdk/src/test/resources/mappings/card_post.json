@@ -1,0 +1,17 @@
+{
+  "request" : {
+    "method" : "POST",
+    "urlPattern" : "/cards",
+    "basicAuthCredentials" : {
+      "username" : "API KEY",
+      "password" : "x"
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "jsonBody" : {},
+    "headers" : {
+      "Content-Type" : "application/json"
+    }
+  }
+}

@@ -25,26 +25,22 @@ public class ApiClient implements HttpRequester {
         this.httpClient = new OkHttpRequester(configs.apiKey, "x");
     }
 
-    @Override
     public HttpResponse get(String path, String parameters, Map<String, String> headers) throws IOException {
         String url = configs.baseUrl + path;
         return this.httpClient.get(url, parameters, headers);
     }
 
-    @Override
     public HttpResponse post(String path, String parameters, Map<String, String> headers) throws IOException {
         String url = configs.baseUrl + path;
 
         return this.httpClient.post(url, parameters, headers);
     }
 
-    @Override
     public HttpResponse put(String path, String parameters, Map<String, String> headers) throws IOException {
         String url = configs.baseUrl + path;
         return this.httpClient.put(url, parameters, headers);
     }
 
-    @Override
     public HttpResponse delete(String path, String parameters, Map<String, String> headers) throws IOException {
         String url = configs.baseUrl + path;
         return this.httpClient.delete(url, parameters, headers);

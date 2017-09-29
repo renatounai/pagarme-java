@@ -6,6 +6,7 @@ import me.pagar.exception.IncompatibleClass;
 import me.pagar.exception.Messages;
 import me.pagar.generickeyvalueobject.EmptyFieldsOnHash;
 import me.pagar.objecttraits.CanBecomeKeyValueVariable;
+import me.pagar.objecttraits.CanBecomeQueryString;
 import me.pagar.objecttraits.CanLoadFieldsFromSources;
 import me.pagar.objecttraits.ResourceObject;
 import me.pagar.resource.GsonConverter;
@@ -127,7 +128,7 @@ public class EndpointConsumer<T extends CanLoadFieldsFromSources> {
         return withParameters(new EmptyFieldsOnHash());
     }
 
-    public List<T> listWithParameters(CanBecomeKeyValueVariable parameters)
+    public List<T> listWithParameters(CanBecomeQueryString parameters)
             throws IOException, ApiErrors, IncompatibleClass {
         String url = buildUrl(this.resources);
         HttpResponse response = doRequest(url, parameters, new HashMap<String, String>());
@@ -168,6 +169,14 @@ public class EndpointConsumer<T extends CanLoadFieldsFromSources> {
                 response = this.client.get(url, parameters.toQueryString(), headers);
                 break;
         }
+        if(response.statusCode() > 299) {
+            throw new ApiErrors(response.statusCode(), url, this.action.toString(), response.body());
+        }
+        return response;
+    }
+
+    private HttpResponse doRequest(String url, CanBecomeQueryString parameters, Map<String, String> headers) throws IOException, ApiErrors {
+        HttpResponse response = this.client.get(url, parameters.toQueryString(), headers);
         if(response.statusCode() > 299) {
             throw new ApiErrors(response.statusCode(), url, this.action.toString(), response.body());
         }

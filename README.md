@@ -2,6 +2,12 @@ Pagar.me Java Library
 ===========================
 [![Build Status](https://travis-ci.org/pagarme/pagarme-java.svg?token=dqgmPH2JHKsHRgaNHZxf&branch=master)](https://travis-ci.org/pagarme/pagarme-java)
 
+#Code standarts
+To run a checkstyle command:
+```
+docker-compose run --rm checkstyle
+```
+
 ## Configure your API key
 
 ```java

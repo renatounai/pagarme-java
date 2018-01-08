@@ -1,0 +1,15 @@
+version: "2"
+
+services:
+  checkstyle:
+    image: "solucionesgbh/checkstyle"
+    volumes:
+      - .:/workdir
+    working_dir: "/workdir"
+    command: ["-c", "./google_checks.xml", "./src"]
+    environment:
+      - .env
+    entrypoint: 
+      - java
+      - -jar 
+      - /checkstyle.jar

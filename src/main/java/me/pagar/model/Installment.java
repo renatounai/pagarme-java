@@ -21,6 +21,18 @@ public class Installment  extends PagarMeModel<String> {
     public int getInstallment_amount() {
         return installment_amount;
     }
+
+    public void setInstallment(int installment) {
+        this.installment = installment;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setInstallment_amount(int installment_amount) {
+        this.installment_amount = installment_amount;
+    }
     
     
 }

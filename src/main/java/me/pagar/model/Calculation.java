@@ -1,19 +1,11 @@
 package me.pagar.model;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.HttpMethod;
-import jdk.nashorn.internal.parser.JSONParser;
-import me.pagar.util.JSONUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  *
@@ -26,7 +18,7 @@ public class Calculation {
     }
 
     public List<Installment> calculateInstallments(int amount,
-            int freeInstallments, int interestRate, int maxInstallments) throws PagarMeException {
+            int freeInstallments, double interestRate, int maxInstallments) throws PagarMeException {
 
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, "/transactions/calculate_installments_amount");
         Map<String, Object> params = new HashMap<String, Object>();

@@ -96,16 +96,25 @@ public class Subscription extends PagarMeModel<String> {
         return other;
     }
 
-    public Collection<Transaction> transactions() throws PagarMeException {
+    public Collection<Transaction> transactions(Integer count, Integer page) throws PagarMeException {
         validateId();
 
         final Transaction transaction = new Transaction();
 
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
                 String.format("/%s/%s/%s", getClassName(), getId(), transaction.getClassName()));
-
+        if (count != null && page != null ) {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("count", count);
+            params.put("page", page);
+            request.setParameters(params);
+        } 
         return JSONUtils.getAsList((JsonArray) request.execute(), new TypeToken<Collection<Transaction>>() {
         }.getType());
+    }
+    
+    public Collection<Transaction> transactions() throws PagarMeException{
+        return transactions(null,null);
     }
 
     public Subscription refresh() throws PagarMeException {
@@ -146,13 +155,14 @@ public class Subscription extends PagarMeModel<String> {
             Map<String, Object> charges = new HashMap<String, Object>();
             charges.put("charges", chargesToSettle);
             request.setParameters(charges);
-        } 
+        }
         return JSONUtils.getAsObject((JsonObject) request.execute(), Subscription.class);
     }
-   
-   public Subscription settleCharges() throws PagarMeException {
+
+    public Subscription settleCharges() throws PagarMeException {
         return settleCharges(null);
-    } 
+    }
+
     private void copy(Subscription other) {
         super.copy(other);
         this.plan = other.getPlan();

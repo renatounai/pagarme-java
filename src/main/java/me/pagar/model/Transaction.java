@@ -93,7 +93,7 @@ public class Transaction extends PagarMeModel<Integer> {
 
     @Expose
     @SerializedName("card_emv_response")
-    private String cardEmvResponse;	
+    private String cardEmvResponse;
 
     @Expose(deserialize = false)
     @SerializedName("card_pin_mode")
@@ -230,7 +230,6 @@ public class Transaction extends PagarMeModel<Integer> {
     /**
      * Custo da transação para o lojista
      */
-
     @Expose(serialize = false)
     private Integer cost;
 
@@ -438,17 +437,14 @@ public class Transaction extends PagarMeModel<Integer> {
      * passar <b>ou</b> o <code>card_hash</code> <b>ou</b> o
      * <code>card_id</code>.
      *
-     * @param amount
-     *            Valor a ser cobrado. Deve ser passado em centavos.
-     * @param cardHash
-     *            Informações do cartão do cliente criptografadas no navegador.
-     * @param cardId
-     *            Ao realizar uma transação, retornamos o <code>card_id</code>
-     *            do cartão para que nas próximas transações desse cartão possa
-     *            ser utilizado esse identificador ao invés do
-     *            <code>card_hash</code>
-     * @param customer
-     *            Dados do cliente a ser cadastrado
+     * @param amount Valor a ser cobrado. Deve ser passado em centavos.
+     * @param cardHash Informações do cartão do cliente criptografadas no
+     * navegador.
+     * @param cardId Ao realizar uma transação, retornamos o
+     * <code>card_id</code> do cartão para que nas próximas transações desse
+     * cartão possa ser utilizado esse identificador ao invés do
+     * <code>card_hash</code>
+     * @param customer Dados do cliente a ser cadastrado
      */
     public Transaction(final Integer amount, final String cardHash, final String cardId, final Customer customer) {
         this();
@@ -650,7 +646,7 @@ public class Transaction extends PagarMeModel<Integer> {
         return metadata;
     }
 
-    public DateTime getBoletoExpirationDate(){
+    public DateTime getBoletoExpirationDate() {
         return boletoExpirationDate;
     }
 
@@ -822,12 +818,10 @@ public class Transaction extends PagarMeModel<Integer> {
     }
 
     /**
-     * @param totalPerPage
-     *            Retorna <code>n</code> objetos de transação
-     * @param page
-     *            Útil para implementação de uma paginação de resultados
+     * @param totalPerPage Retorna <code>n</code> objetos de transação
+     * @param page Útil para implementação de uma paginação de resultados
      * @return Uma {@link Collection} contendo objetos de transações, ordenadas
-     *         a partir da transação realizada mais recentemente.
+     * a partir da transação realizada mais recentemente.
      * @throws PagarMeException
      */
     public Collection<Transaction> list(int totalPerPage, int page) throws PagarMeException {
@@ -851,6 +845,19 @@ public class Transaction extends PagarMeModel<Integer> {
                 String.format("/%s/%s", getClassName(), cardHashKeyEndpoint));
 
         return JSONUtils.getAsObject((JsonObject) request.execute(), CardHashKey.class);
+    }
+
+    /**
+     * Retorna o histórioc de operações de uma transação
+     *
+     * @return Collection<Operation>
+     * @throws PagarMeException
+     */
+    public Collection<Operation> getOperations() throws PagarMeException {
+        final Operation operation = new Operation();
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, String.format("/%s/%s/%s", getClassName(), getId(), operation.getClassName()));
+        return JSONUtils.getAsList((JsonArray) request.execute(), new TypeToken<Collection<Operation>>() {
+        }.getType());
     }
 
     /**
@@ -892,8 +899,7 @@ public class Transaction extends PagarMeModel<Integer> {
      * Retorna um objeto {@link Payable} informando os dados de um pagamento
      * referente a uma determinada transação.
      *
-     * @param payableId
-     *            ID do {@link Payable}
+     * @param payableId ID do {@link Payable}
      * @return Um {@link Payable}
      * @throws PagarMeException
      */
@@ -930,8 +936,7 @@ public class Transaction extends PagarMeModel<Integer> {
     /**
      * Retorna um {@link Postback} específico relacionado a transação.
      *
-     * @param postbackId
-     *            ID do {@link Postback}
+     * @param postbackId ID do {@link Postback}
      * @return Um {@link Postback}
      * @throws PagarMeException
      */
@@ -952,8 +957,7 @@ public class Transaction extends PagarMeModel<Integer> {
      * {@link Postback} falhe ou seu servidor não o receba, nós o retentamos
      * diversas vezes (com um total de 31 vezes).
      *
-     * @param postbackId
-     *            ID do {@link Postback}
+     * @param postbackId ID do {@link Postback}
      * @return Reenviando um {@link Postback}
      * @throws PagarMeException
      */
@@ -989,8 +993,7 @@ public class Transaction extends PagarMeModel<Integer> {
     /**
      * Retorna os dados das {@link SplitRule} do valor transacionado.
      *
-     * @param splitRuleId
-     *            O ID da Regra de Split
+     * @param splitRuleId O ID da Regra de Split
      * @return Retornando uma {@link SplitRule} específica
      * @throws PagarMeException
      */
@@ -1050,13 +1053,13 @@ public class Transaction extends PagarMeModel<Integer> {
 
         return other;
     }
-    
+
     public Transaction refund(final BankAccount bankAccount) throws PagarMeException {
         validateId();
 
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.POST,
                 String.format("/%s/%s/refund", getClassName(), getId()));
-                
+
         Map<String, Object> bankAccountMap = JSONUtils.objectToMap(bankAccount);
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("bank_account", bankAccountMap);
@@ -1085,12 +1088,14 @@ public class Transaction extends PagarMeModel<Integer> {
                 String.format("/%s/%s/capture", getClassName(), getId()));
 
         request.getParameters().put("amount", amount);
-		
-        if (this.getMetadata() != null)
-            request.getParameters().put("metadata", this.getMetadata());
 
-        if (this.getSplitRules() != null)
+        if (this.getMetadata() != null) {
+            request.getParameters().put("metadata", this.getMetadata());
+        }
+
+        if (this.getSplitRules() != null) {
             request.getParameters().put("split_rules", this.getSplitRules());
+        }
 
         final Transaction other = JSONUtils.getAsObject((JsonObject) request.execute(), Transaction.class);
         copy(other);
@@ -1098,14 +1103,14 @@ public class Transaction extends PagarMeModel<Integer> {
 
         return other;
     }
-    
+
     public Collection<Payable> findPayableCollection(final Integer totalPerPage, Integer page) throws PagarMeException {
         validateId();
         JsonArray responseArray = super.paginateThrough(totalPerPage, page, new PayableQueriableFields());
         return JSONUtils.getAsList(responseArray, new TypeToken<Collection<Payable>>() {
         }.getType());
     }
-    
+
     public Payable findPayable(Integer payableId) throws PagarMeException {
         validateId();
         Payable payable = new Payable();
@@ -1113,7 +1118,6 @@ public class Transaction extends PagarMeModel<Integer> {
         JsonObject responseObject = super.getThrough(payable);
         return JSONUtils.getAsObject(responseObject, Payable.class);
     }
-
 
     /**
      * Atualiza a instância do objeto com os dados mais recentes do backend.
@@ -1171,22 +1175,17 @@ public class Transaction extends PagarMeModel<Integer> {
          */
         @SerializedName("development")
         DEVELOPMENT,
-
         /**
          * adquirente Pagar.me
          */
         @SerializedName("pagarme")
         PAGARME,
-
         @SerializedName("stone")
         STONE,
-
         @SerializedName("cielo")
         CIELO,
-
         @SerializedName("rede")
         REDE,
-
         @SerializedName("mundipagg")
         MUNDIPAGG
 
@@ -1206,10 +1205,8 @@ public class Transaction extends PagarMeModel<Integer> {
 
         @SerializedName("credit_card")
         CREDIT_CARD,
-
         @SerializedName("boleto")
         BOLETO,
-
         @SerializedName("debit_card")
         DEBIT_CARD
     }
@@ -1218,10 +1215,8 @@ public class Transaction extends PagarMeModel<Integer> {
 
         @SerializedName("emv")
         EMV,
-
         @SerializedName("magstripe")
         MAGSTRIPE,
-
         @SerializedName("ecommerce")
         ECOMMERCE
     }
@@ -1237,7 +1232,6 @@ public class Transaction extends PagarMeModel<Integer> {
          */
         @SerializedName("processing")
         PROCESSING,
-
         /**
          * Transação autorizada. Cliente possui saldo na conta e este valor foi
          * reservado para futura captura, que deve acontecer em no máximo 5
@@ -1246,38 +1240,32 @@ public class Transaction extends PagarMeModel<Integer> {
          */
         @SerializedName("authorized")
         AUTHORIZED,
-
         /**
          * Transação paga (autorizada e capturada).
          */
         @SerializedName("paid")
         PAID,
-
         /**
          * Transação estornada.
          */
         @SerializedName("refunded")
         REFUNDED,
-
         /**
          * Transação aguardando pagamento (status para transações criadas com
          * boleto bancário).
          */
         @SerializedName("waiting_payment")
         WAITING_PAYMENT,
-
         /**
          * Transação paga com boleto aguardando para ser estornada.
          */
         @SerializedName("pending_refund")
         PENDING_REFUND,
-
         /**
          * Transação não autorizada.
          */
         @SerializedName("refused")
         REFUSED,
-
         /**
          * Transação sofreu chargeback.
          */
@@ -1293,20 +1281,15 @@ public class Transaction extends PagarMeModel<Integer> {
 
         @SerializedName("acquirer")
         ACQUIRER,
-
         @SerializedName("antifraud")
         ANTIFRAUD,
-
         @SerializedName("internal_error")
         INTERNAL_ERROR,
-
         @SerializedName("no_acquirer")
         NO_ACQUIRER,
-
         @SerializedName("acquirer_timeout")
         ACQUIRER_TIMEOUT
 
     }
 
 }
-

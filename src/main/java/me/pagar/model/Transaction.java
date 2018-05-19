@@ -869,6 +869,15 @@ public class Transaction extends PagarMeModel<Integer> {
 
         return JSONUtils.getAsObject((JsonObject) request.execute(), AntifraudAnalysis.class);
     }
+    
+    public JsonObject collectPayment(String email) throws PagarMeException{
+        validateId();
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.POST, String.format("/%s/%s/%s", getClassName(),getId(),"collect_payment" ));
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("email", email);
+        request.setParameters(params);
+        return request.execute();
+    }
 
     /**
      * Retorna todas as {@link AntifraudAnalysis} realizadas em uma transação.

@@ -13,7 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
-import me.pagar.BalanceOperation;
+import me.pagar.model.BalanceOperation;
 
 import me.pagar.model.BulkAnticipation.Timeframe;
 import me.pagar.util.DateTimeTimestampAdapter;

@@ -1,4 +1,3 @@
-
 package me.pagar.model;
 
 import com.google.gson.JsonObject;
@@ -12,7 +11,8 @@ import me.pagar.util.JSONUtils;
  *
  * @author ta-ma
  */
-public class Zipcode extends  PagarMeModel<String>  {
+public class Zipcode extends PagarMeModel<String> {
+
     @Expose
     private String zipcode;
     @Expose
@@ -22,9 +22,9 @@ public class Zipcode extends  PagarMeModel<String>  {
     @Expose
     private String city;
     @Expose
-    private String state; 
-    
-    public Zipcode(){
+    private String state;
+
+    public Zipcode() {
     }
 
     public String getZipcode() {
@@ -66,21 +66,18 @@ public class Zipcode extends  PagarMeModel<String>  {
     public void setState(String state) {
         this.state = state;
     }
-    
-     public Zipcode checkZipcode(String zipcode) {
-        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, "/zipcodes/"+zipcode);
-        try {
-            final Zipcode other = JSONUtils.getAsObject((JsonObject) request.execute(), Zipcode.class);
-            copy(other);
-            flush();
-            return other;
-        } catch (PagarMeException ex) {
-            Logger.getLogger(Zipcode.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+
+    public Zipcode checkZipcode(String zipcode) throws PagarMeException {
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, "/zipcodes/" + zipcode);
+
+        final Zipcode other = JSONUtils.getAsObject((JsonObject) request.execute(), Zipcode.class);
+        copy(other);
+        flush();
+        return other;
+
     }
-    
-    private void copy(Zipcode other){
+
+    private void copy(Zipcode other) {
         super.copy(other);
         this.city = other.city;
         this.neighborhood = other.neighborhood;
@@ -88,5 +85,5 @@ public class Zipcode extends  PagarMeModel<String>  {
         this.zipcode = other.zipcode;
         this.state = other.state;
     }
-    
+
 }

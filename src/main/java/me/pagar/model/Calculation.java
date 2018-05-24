@@ -33,7 +33,7 @@ public class Calculation {
         for (int i = 1; i <= maxInstallments; i++) {
             Installment objInstallment = new Installment();
             JsonObject installment = installmentsArray.getAsJsonObject(""+i);
-            objInstallment.setInstallment_amount(Integer.parseInt(installment.get("installment_amount").toString()));
+            objInstallment.setInstallmentAmount(Integer.parseInt(installment.get("installment_amount").toString()));
             objInstallment.setAmount(Integer.parseInt(installment.get("amount").toString()));
             objInstallment.setInstallment(Integer.parseInt(installment.get("installment").toString()));
             installments.add(objInstallment);

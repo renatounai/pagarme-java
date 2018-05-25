@@ -1,21 +1,10 @@
 package me.pagar.model;
 
-import com.google.common.base.CaseFormat;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.atteo.evo.inflector.English;
 import org.joda.time.DateTime;
 
-public class SplitRule {
-    
-    private String className;
-
-    public SplitRule(){
-                className = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, English.plural(getClass().getSimpleName()));
-
-    }
-    @Expose
-    private String id;
+public class SplitRule extends PagarMeModel<String> {
 
     @Expose
     @SerializedName("recipient_id")
@@ -37,11 +26,7 @@ public class SplitRule {
     @Expose(serialize = false)
     @SerializedName("date_updated")
     private DateTime updatedAt;
-    
-    @Expose(serialize = false)
-    @SerializedName("date_created")
-    private DateTime createdAt;
-    
+
     public String getRecipientId() {
         return recipientId;
     }
@@ -86,23 +71,14 @@ public class SplitRule {
         this.amount = amount;
     }
 
+    @Override
     public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getClassName() {
-        return className;
+        throw new UnsupportedOperationException("Not allowed.");
     }
 
     @Override
-    public String toString() {
-        return "SplitRule{"  + "id=" + id + ", recipientId=" + recipientId + ", chargeProcessingFee=" + chargeProcessingFee + ", liable=" + liable + ", percentage=" + percentage + ", amount=" + amount + ", updatedAt=" + updatedAt + ", createdAt=" + createdAt +'}';
+    public void setClassName(String className) {
+        throw new UnsupportedOperationException("Not allowed.");
     }
-    
-    
 
 }

@@ -1063,10 +1063,8 @@ public class Transaction extends PagarMeModel<Integer> {
         validateId();
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.POST,
                 String.format("/%s/%s/refund", getClassName(), getId()));
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("amount",amount);
-        parameters.put("split_rules", splitRules);
-        request.setParameters(parameters);
+        request.getParameters().put("amount", amount);
+        request.getParameters().put("splitRules", splitRules);
         final Transaction other = JSONUtils.getAsObject((JsonObject) request.execute(), Transaction.class);
         copy(other);
         flush();

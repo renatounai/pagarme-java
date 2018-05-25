@@ -1,13 +1,9 @@
 package me.pagarme;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import junit.framework.Assert;
 import me.pagar.model.Calculation;
 import me.pagar.model.Installment;
-import me.pagarme.factory.CalculationFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,18 +13,12 @@ import org.junit.Test;
  */
 public class CalculateInstallmentsTest extends BaseTest {
 
-    public CalculationFactory calcFactory = new CalculationFactory();
     public Calculation calculation;
 
     @Before
     public void setUp() {
         super.setUp();
-        try {
-            calculation = calcFactory.create();
-        } catch (Throwable ex) {
-            Logger.getLogger(CalculateInstallmentsTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        calculation = new Calculation();
     }
 
     @Test

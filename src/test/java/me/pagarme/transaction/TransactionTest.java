@@ -470,9 +470,9 @@ public class TransactionTest extends BaseTest {
         foundTransaction.refundWithSplit(refundedAmount, foundSplitRules);
         assertEquals(refundedAmount, foundTransaction.getRefundedAmount());
         List<Payable> payables = (List<Payable>) foundTransaction.payables();
-        Integer payableExcpetedAmount = -2000;
-        assertEquals(payables.get(0).getAmount(), payableExcpetedAmount);
-        assertEquals(payables.get(1).getAmount(), payableExcpetedAmount);
+        Integer payableExpectedAmount = -2000;
+        assertEquals(payables.get(0).getAmount(), payableExpectedAmount);
+        assertEquals(payables.get(1).getAmount(), payableExpectedAmount);
         
         
     }

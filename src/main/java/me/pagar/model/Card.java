@@ -46,8 +46,8 @@ public class Card extends PagarMeModel<String> {
     @Expose(serialize = false)
     private Boolean valid;
 
-    @Expose(deserialize = false)
-    @SerializedName("card_expiration_date")
+    @Expose
+    @SerializedName("expiration_date")
     private String expiresAt;
 
     @Expose(serialize = false)
@@ -153,7 +153,6 @@ public class Card extends PagarMeModel<String> {
         final Card other = JSONUtils.getAsObject((JsonObject) request.execute(), Card.class);
         copy(other);
         flush();
-
         return other;
     }
 
@@ -174,6 +173,7 @@ public class Card extends PagarMeModel<String> {
         this.fingerprint = other.fingerprint;
         this.country = other.country;
         this.valid = other.valid;
+        this.expiresAt = other.expiresAt;
     }
 
     public enum Brand {

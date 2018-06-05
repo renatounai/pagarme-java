@@ -29,6 +29,8 @@ public class Plan extends PagarMeModel<String> {
     private Integer charges;
     @Expose
     private Integer installments;
+    @Expose
+    private Integer invoiceReminder;
 
     public Plan save() throws PagarMeException {
         final Plan saved = super.save(getClass());
@@ -93,6 +95,10 @@ public class Plan extends PagarMeModel<String> {
     public void setAmount(Integer amount){
         this.amount = amount;
     }
+    
+    public void setInvoiceReminder(Integer invoiceReminder){
+        this.invoiceReminder = invoiceReminder; 
+    }
 
     private void copy(Plan other) {
         super.copy(other);
@@ -103,6 +109,7 @@ public class Plan extends PagarMeModel<String> {
         this.paymentMethods = other.getPaymentMethods();
         this.charges = other.getCharges();
         this.installments = other.getInstallments();
+        this.invoiceReminder = other.getInvoiceReminder(); 
     }
 
     public Integer getAmount() {
@@ -132,5 +139,10 @@ public class Plan extends PagarMeModel<String> {
     public Integer getInstallments() {
         return installments;
     }
+    
+    public Integer getInvoiceReminder(){
+        return invoiceReminder;
+    }
+    
 
 }

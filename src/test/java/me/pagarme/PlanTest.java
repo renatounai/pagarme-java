@@ -29,6 +29,7 @@ public class PlanTest extends BaseTest {
         Assert.assertEquals(Integer.valueOf(PlanFactory.DEFAULT_CHARGES), plan.getCharges());
         Assert.assertEquals(Integer.valueOf(PlanFactory.DEFAULT_INSTALLMENTS), plan.getInstallments());
         Assert.assertEquals(Integer.valueOf(PlanFactory.DEFAULT_TRIAL_DAYS), plan.getTrialDays());
+        Assert.assertEquals(Integer.valueOf(PlanFactory.DEFAULT_INVOICE_REMINDER), plan.getInvoiceReminder());
         Assert.assertNotNull(plan.getCreatedAt());
     }
 

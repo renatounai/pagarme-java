@@ -1,5 +1,4 @@
-me: Fix
-about: Report de bugs, hotfixes e comportamentos quebrados que precisam ser consertados
+Report de bugs, hotfixes e comportamentos quebrados que precisam ser consertados
 
 ---
 

@@ -1,5 +1,5 @@
-me: Feature
-about: Novas funcionalidades, componentes e melhorias
+
+Novas funcionalidades, componentes e melhorias para o SDK 
 
 ---
 

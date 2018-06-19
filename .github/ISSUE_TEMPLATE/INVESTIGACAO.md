@@ -1,5 +1,4 @@
-me: Investigação
-about: Investigação de problemas, incidentes e eventos com causa desconhecida
+Investigação de problemas, incidentes e eventos com causa desconhecida
 
 ---
 

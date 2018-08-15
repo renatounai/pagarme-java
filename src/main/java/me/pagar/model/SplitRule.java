@@ -22,6 +22,10 @@ public class SplitRule extends PagarMeModel<String>{
     @Expose
     private Integer amount;
 
+    @Expose
+    @SerializedName("charge_remainder")
+    private Boolean chargeRemainder;
+
     @Expose(serialize = false)
     @SerializedName("date_updated")
     private DateTime updatedAt;
@@ -46,6 +50,10 @@ public class SplitRule extends PagarMeModel<String>{
         return amount;
     }
 
+    public Boolean getChargeRemainder() {
+        return chargeRemainder;
+    }
+
     public DateTime getUpdatedAt() {
         return updatedAt;
     }
@@ -68,6 +76,10 @@ public class SplitRule extends PagarMeModel<String>{
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public void setChargeRemainder(Boolean chargeRemainder) {
+        this.chargeRemainder = chargeRemainder;
     }
 
     @Override

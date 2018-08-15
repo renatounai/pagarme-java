@@ -75,7 +75,7 @@ public class RestClient {
             this.parameters = new HashMap<String, Object>();
         }
 
-        headers.put("User-Agent", "pagarme-java 1.0.0");
+        headers.put("User-Agent", "pagarme-java 1.5.5");
         headers.put("Accept", "application/json");
 
         if (Strings.isNullOrEmpty(url)) {

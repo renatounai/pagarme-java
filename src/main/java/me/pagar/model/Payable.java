@@ -236,6 +236,9 @@ public class Payable extends PagarMeModel<Integer> {
 
     public enum Type {
 
+        @SerializedName("chargeback_refund")
+        CHARGEBACK_REFUND, 
+        
         @SerializedName("chargeback")
         CHARGEBACK,
 

@@ -45,11 +45,11 @@ public class TransactionTest extends BaseTest {
     }
 
     @Test
-    public void testCreatedDateExistence() throws PagarMeException{
+    public void testCreatedDateExistence() throws PagarMeException {
 
         transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.save();
-        
+
         Assert.assertNotNull(transaction.getCreatedAt());
         Assert.assertNotNull(transaction.getUpdatedAt());
     }
@@ -83,13 +83,13 @@ public class TransactionTest extends BaseTest {
         transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(true);
 
-        Map<String, Object> metadata =  new HashMap<String, Object>();
+        Map<String, Object> metadata = new HashMap<String, Object>();
         metadata.put("metadata1", "value1");
         metadata.put("metadata2", "value2");
 
         transaction.setMetadata(metadata);
         transaction.save();
-        
+
         Transaction foundTransaction = new Transaction().find(transaction.getId());
 
         Assert.assertEquals(foundTransaction.getPaymentMethod(), Transaction.PaymentMethod.CREDIT_CARD);
@@ -106,7 +106,7 @@ public class TransactionTest extends BaseTest {
         transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(true);
 
-        Map<String, Object> antifraudMetadata =  new HashMap<String, Object>();
+        Map<String, Object> antifraudMetadata = new HashMap<String, Object>();
         antifraudMetadata.put("antifraudMetadata1", "value1");
         antifraudMetadata.put("antifraudMetadata2", "value2");
 
@@ -145,7 +145,7 @@ public class TransactionTest extends BaseTest {
         transaction.setCapture(false);
         transaction.save();
 
-        Map<String, Object> metadata =  new HashMap<String, Object>();
+        Map<String, Object> metadata = new HashMap<String, Object>();
         metadata.put("metadata1", "value1");
         metadata.put("metadata2", "value2");
         transaction.setMetadata(metadata);
@@ -258,7 +258,7 @@ public class TransactionTest extends BaseTest {
         transaction2.save();
         transaction2 = testEndpoints.payBoleto(transaction2);
 
-        BankAccount bankAccount = (BankAccount)new BankAccount().findCollection(1, 0).toArray()[0];
+        BankAccount bankAccount = (BankAccount) new BankAccount().findCollection(1, 0).toArray()[0];
         transaction.refund(bankAccount);
 
         Assert.assertEquals(Transaction.Status.PENDING_REFUND, transaction.getStatus());
@@ -300,7 +300,7 @@ public class TransactionTest extends BaseTest {
     }
 
     @Test
-    public void testBoletoExpirationDate() throws Throwable{
+    public void testBoletoExpirationDate() throws Throwable {
         transaction = transactionFactory.createBoletoTransaction();
         transaction.setBoletoExpirationDate(DateTime.now().plusDays(4));
         transaction.save();
@@ -353,7 +353,7 @@ public class TransactionTest extends BaseTest {
         Assert.assertEquals(transactionPhone.getDdd(), "11");
         Assert.assertEquals(transactionPhone.getNumber(), "55284132");
     }
-    
+
     @Test
     public void testCaptureFalseWithSplitTransaction() throws Throwable {
 
@@ -362,11 +362,11 @@ public class TransactionTest extends BaseTest {
         transaction.setAmount(10000);
         Customer customer = customerFactory.create();
         transaction.setCustomer(customer);
-        
+
         transaction.save();
-        
+
         Collection<SplitRule> splitRules = new ArrayList<SplitRule>();
-        
+
         Recipient recipient1 = recipientFactory.create();
         recipient1.save();
         SplitRule splitRule = new SplitRule();
@@ -376,7 +376,7 @@ public class TransactionTest extends BaseTest {
         splitRule.setChargeProcessingFee(true);
         splitRules.add(splitRule);
 
-        Recipient recipient2  = recipientFactory.create();
+        Recipient recipient2 = recipientFactory.create();
         SplitRule splitRule2 = new SplitRule();
         recipient2.save();
         splitRule2.setRecipientId(recipient2.getId());
@@ -385,14 +385,14 @@ public class TransactionTest extends BaseTest {
         splitRule2.setChargeProcessingFee(true);
 
         splitRules.add(splitRule2);
-        
+
         Assert.assertEquals(transaction.getStatus(), Transaction.Status.AUTHORIZED);
         transaction.setSplitRules(splitRules);
         transaction.capture(transaction.getAmount());
         Transaction foundTransaction = new Transaction().find(transaction.getId());
         Collection<SplitRule> foundSplitRules = foundTransaction.getSplitRules();
         Assert.assertEquals(splitRules.size(), foundSplitRules.size());
-        
+
     }
 
     @Test
@@ -403,7 +403,7 @@ public class TransactionTest extends BaseTest {
         transaction.setAmount(10000);
 
         Collection<SplitRule> splitRules = new ArrayList<SplitRule>();
-        
+
         Recipient recipient1 = recipientFactory.create();
         recipient1.save();
         SplitRule splitRule = new SplitRule();
@@ -413,7 +413,7 @@ public class TransactionTest extends BaseTest {
         splitRule.setChargeProcessingFee(true);
         splitRules.add(splitRule);
 
-        Recipient recipient2  = recipientFactory.create();
+        Recipient recipient2 = recipientFactory.create();
         SplitRule splitRule2 = new SplitRule();
         recipient2.save();
         splitRule2.setRecipientId(recipient2.getId());
@@ -424,11 +424,34 @@ public class TransactionTest extends BaseTest {
         splitRules.add(splitRule2);
         transaction.setSplitRules(splitRules);
         transaction.save();
-        
+
         Transaction foundTransaction = new Transaction().find(transaction.getId());
         Collection<SplitRule> foundSplitRules = foundTransaction.getSplitRules();
         Assert.assertEquals(splitRules.size(), foundSplitRules.size());
+
+    }
+
+    @Test
+    public void testReferenceKey() throws PagarMeException {
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
+        String referenceKey = "REF7891011";
+        transaction.setReferenceKey(referenceKey);
+        transaction.save();
+
+        Transaction foundTransaction = new Transaction().findByRefenceKey(referenceKey);
+        Assert.assertEquals(transaction.getId(), foundTransaction.getId());
+
+    }
+
+    @Test(expected = PagarMeException.class)
+    public void testeReferenceKenOnError() throws PagarMeException {
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
+        String referenceKey = "REF78910112";
+        transaction.setReferenceKey(referenceKey);
+        transaction.save();
+        transaction.save();
         
+
     }
 //
 //    private String getRecipientId(Boolean documentNumber) {

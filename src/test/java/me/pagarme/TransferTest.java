@@ -119,4 +119,21 @@ public class TransferTest extends BaseTest {
         Collection<Transfer> foundTransfers = new Transfer().findCollection(10, 0);
         Assert.assertEquals(2, foundTransfers.size());
     }
+
+    @Test
+    public void testTransferWithRecipientId() throws PagarMeException{
+        Transfer transfer = new Transfer();
+        transfer.setAmount(1000);
+        transfer.setRecipientId(newRecipient.getId());
+        transfer.save();
+
+        Assert.assertEquals(Transfer.Status.PENDING_TRANSFER, transfer.getStatus());
+        Assert.assertEquals(Transfer.Type.TED, transfer.getType());
+        Assert.assertEquals(newRecipient.getId(), transfer.getRecipientId());
+        Assert.assertEquals(Integer.valueOf(1000), transfer.getAmount());
+        Assert.assertNotNull(transfer.getFee());
+        Assert.assertNotNull(transfer.getCreatedAt());
+        Assert.assertNotNull(transfer.getFundingEstimatedDate());
+
+    }
 }

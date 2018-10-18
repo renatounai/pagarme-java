@@ -95,6 +95,10 @@ public class Transfer extends PagarMeModel<String> {
         this.bankAccountId = bankAccountId;
     }
 
+    public void setRecipientId(String recipientId) {
+        this.recipientId = recipientId;
+    }
+
     public Transfer save() throws PagarMeException{
         final Transfer saved = super.save(getClass());
         copy(saved);

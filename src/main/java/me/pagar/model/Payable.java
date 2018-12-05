@@ -230,7 +230,10 @@ public class Payable extends PagarMeModel<Integer> {
         WAITING_FUNDS,
         
         @SerializedName("suspended")
-        SUSPENDED
+        SUSPENDED,
+
+        @SerializedName("prepaid")
+        PREPAID
         
     }
 

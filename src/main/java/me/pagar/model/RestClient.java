@@ -92,7 +92,10 @@ public class RestClient {
             this.parameters = new HashMap<String, Object>();
         }
 
-        headers.put("User-Agent", "pagarme-java 1.5.5");
+        String sdkVersion = String.format("PagarMe-Java/%s", PagarMe.VERSION);
+
+        headers.put("User-Agent", sdkVersion);
+        headers.put("X-PagarMe-User-Agent", sdkVersion);
         headers.put("Accept", "application/json");
 
         if (Strings.isNullOrEmpty(url)) {

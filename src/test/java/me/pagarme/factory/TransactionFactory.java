@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import me.pagar.model.Billing;
 import me.pagar.model.Card;
+import me.pagar.model.Customer;
 import me.pagar.model.Item;
 import me.pagar.model.Shipping;
 import me.pagar.model.Transaction;
@@ -95,8 +96,10 @@ public class TransactionFactory {
     public Transaction createBoletoTransaction() {
 
         Transaction transaction = new Transaction();
+        Customer customer = customerFactory.create();
 
         transaction.setAmount(AMOUNT);
+        transaction.setCustomer(customer);
         transaction.setPaymentMethod(Transaction.PaymentMethod.BOLETO);
         return transaction;
     }

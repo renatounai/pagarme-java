@@ -17,9 +17,13 @@ import com.google.gson.reflect.TypeToken;
 import me.pagar.model.BulkAnticipation.Timeframe;
 import me.pagar.util.DateTimeTimestampAdapter;
 import me.pagar.util.JSONUtils;
+import me.pagar.RecipientStatus;
 
 public class Recipient  extends PagarMeModel<String> {
 
+    @Expose
+    private RecipientStatus status;
+    
     @Expose
     @SerializedName(value = "automatic_anticipation_enabled")
     private Boolean automaticAnticipationEnabled;
@@ -62,7 +66,9 @@ public class Recipient  extends PagarMeModel<String> {
     public Boolean isTransferEnabled() {
         return transferEnabled;
     }
-
+    public RecipientStatus getStatus() {
+        return status;
+    }
     public Integer getAnticipatableVolumePercentage() {
         return anticipatableVolumePercentage;
     }
@@ -89,6 +95,11 @@ public class Recipient  extends PagarMeModel<String> {
 
     public Boolean getAutomaticAnticipationEnabled() {
         return automaticAnticipationEnabled;
+    }
+    
+    public void setStatus(RecipientStatus status) {
+        this.status = status;
+        addUnsavedProperty("status");
     }
 
     public void setAutomaticAnticipationEnabled(Boolean automaticAnticipationEnabled) {
@@ -245,6 +256,7 @@ public class Recipient  extends PagarMeModel<String> {
         this.transferInterval = other.transferInterval;
         this.updatedAt = other.updatedAt;
         this.bankAccount = other.bankAccount;
+        this.status = other.status;
     }
 
     public enum TransferInterval {

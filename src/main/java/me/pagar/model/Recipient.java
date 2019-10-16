@@ -22,6 +22,7 @@ import me.pagar.RecipientStatus;
 public class Recipient  extends PagarMeModel<String> {
 
     @Expose
+    @SerializedName(value = "status")
     private RecipientStatus status;
     
     @Expose

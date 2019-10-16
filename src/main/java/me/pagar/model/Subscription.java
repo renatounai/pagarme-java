@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +42,9 @@ public class Subscription extends PagarMeModel<String> {
     private Map<String, Object> metadata;
     @Expose(deserialize = false)
     private Collection<SplitRule> splitRules;
+    @Expose(deserialize = false)
+    @SerializedName("soft_descriptor")
+    private String softDescriptor;
 
     @Expose(serialize = false)
     private Plan plan;
@@ -174,6 +178,7 @@ public class Subscription extends PagarMeModel<String> {
         this.customer = other.getCustomer();
         this.paymentMethod = other.getPaymentMethod();
         this.splitRules = other.getSplitRules();
+        this.softDescriptor = other.getSoftDescriptor();
         this.phone = other.getPhone();
         this.address = other.getAddress();
         this.card = other.getCard();
@@ -234,7 +239,11 @@ public class Subscription extends PagarMeModel<String> {
     public void setSplitRules(final Collection<SplitRule> splitRules) {
         this.splitRules = splitRules;
     }
-
+    
+    public void setSoftDescriptor(String softDescriptor) {
+        this.softDescriptor = softDescriptor;
+    }
+    
     public void setMetadata(final Map<String, Object> metadata) {
         this.metadata = metadata;
     }
@@ -269,6 +278,10 @@ public class Subscription extends PagarMeModel<String> {
 
     public Collection<SplitRule> getSplitRules() {
         return splitRules;
+    }
+    
+    public String getSoftDescriptor() {
+        return softDescriptor;
     }
 
     public DateTime getCurrentPeriodStart() {

@@ -2,6 +2,7 @@ package me.pagarme.factory;
 
 import me.pagar.model.BankAccount;
 import me.pagar.model.Recipient;
+import me.pagar.RecipientStatus;
 import me.pagar.model.Recipient.TransferInterval;
 
 public class RecipientFactory {
@@ -10,6 +11,7 @@ public class RecipientFactory {
     public static final Boolean DEFAULT_TRANSFER_ENABLED = true;
     public static final Boolean DEFAULT_AUTOMATIC_ANTICIPATION_ENABLED = true;
     public static final TransferInterval DEFAULT_TRANSFER_INTERVAL = TransferInterval.WEEKLY;
+    public static final RecipientStatus DEFAULT_STATUS = RecipientStatus.ACTIVE;
     private BankAccountFactory bankAccountFactory = new BankAccountFactory();
     
     public Recipient create(){
@@ -20,6 +22,7 @@ public class RecipientFactory {
         recipient.setTransferEnabled(DEFAULT_TRANSFER_ENABLED);
         recipient.setTransferInterval(TransferInterval.WEEKLY);
         recipient.setAutomaticAnticipationEnabled(DEFAULT_AUTOMATIC_ANTICIPATION_ENABLED);
+        recipient.setStatus(DEFAULT_STATUS);
         return recipient;
     }
 }

@@ -2,6 +2,7 @@ package me.pagarme;
 
 
 import java.util.Collection;
+import me.pagar.RecipientStatus;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,6 +40,7 @@ public class RecipientTest extends BaseTest{
         Assert.assertEquals(recipient.getTransferInterval(), RecipientFactory.DEFAULT_TRANSFER_INTERVAL);
         Assert.assertEquals(recipient.isTransferEnabled(), RecipientFactory.DEFAULT_TRANSFER_ENABLED);
         Assert.assertEquals(recipient.getAutomaticAnticipationEnabled(), RecipientFactory.DEFAULT_AUTOMATIC_ANTICIPATION_ENABLED);
+        Assert.assertEquals(recipient.getStatus(), RecipientFactory.DEFAULT_STATUS);
 
         int recipientBankAccountId = recipient.getBankAccount().getId();
         Assert.assertEquals(recipientBankAccountId, bankAccountId);
@@ -55,6 +57,7 @@ public class RecipientTest extends BaseTest{
 
         Assert.assertEquals(recipient.getTransferInterval(), RecipientFactory.DEFAULT_TRANSFER_INTERVAL);
         Assert.assertEquals(recipient.isTransferEnabled(), RecipientFactory.DEFAULT_TRANSFER_ENABLED);
+        Assert.assertEquals(recipient.getStatus(), RecipientFactory.DEFAULT_STATUS);
 
         int recipientBankAccountId = recipient.getBankAccount().getId();
         Assert.assertEquals(recipientBankAccountId, bankAccountId);
@@ -74,11 +77,47 @@ public class RecipientTest extends BaseTest{
         for (Recipient recipient : recipientCollection) {
             Assert.assertEquals(recipient.getTransferInterval(), RecipientFactory.DEFAULT_TRANSFER_INTERVAL);
             Assert.assertEquals(recipient.isTransferEnabled(), RecipientFactory.DEFAULT_TRANSFER_ENABLED);
+            Assert.assertEquals(recipient.getStatus(), RecipientFactory.DEFAULT_STATUS);
 
             int recipientBankAccountId = recipient.getBankAccount().getId();
             Assert.assertEquals(recipientBankAccountId, bankAccountId);
         }
 
     }
+    
+    @Test
+    public void testChangeRecipientStatus() throws PagarMeException {
+
+        int bankAccountId = bankAccountFactory.create().save().getId();
+        Recipient recipient = recipientFactory.create();
+        recipient.setBankAccountId(bankAccountId);
+
+        recipient.save();
+        recipient.setStatus(RecipientStatus.PROCESSING);
+        recipient = recipient.save(); 
+        Assert.assertEquals(recipient.getStatus(), RecipientStatus.PROCESSING);
+        recipient.setStatus(RecipientStatus.REGISTRATION);
+        recipient = recipient.save(); 
+        Assert.assertEquals(recipient.getStatus(), RecipientStatus.REGISTRATION);
+        recipient.setStatus(RecipientStatus.AFFILIATION);
+        recipient = recipient.save(); 
+        Assert.assertEquals(recipient.getStatus(), RecipientStatus.AFFILIATION);
+        recipient.setStatus(RecipientStatus.ACTIVE);
+        recipient = recipient.save(); 
+        Assert.assertEquals(recipient.getStatus(), RecipientStatus.ACTIVE);
+        recipient.setStatus(RecipientStatus.REFUSED);
+        recipient = recipient.save(); 
+        Assert.assertEquals(recipient.getStatus(), RecipientStatus.REFUSED);
+        recipient.setStatus(RecipientStatus.SUSPENDED);
+        recipient = recipient.save(); 
+        Assert.assertEquals(recipient.getStatus(), RecipientStatus.SUSPENDED);
+        recipient.setStatus(RecipientStatus.BLOCKED);
+        recipient = recipient.save(); 
+        Assert.assertEquals(recipient.getStatus(), RecipientStatus.BLOCKED);
+        recipient.setStatus(RecipientStatus.INACTIVE);
+        recipient = recipient.save(); 
+        Assert.assertEquals(recipient.getStatus(), RecipientStatus.INACTIVE);
+
+       }
 
 }

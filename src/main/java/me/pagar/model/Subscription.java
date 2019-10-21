@@ -42,7 +42,7 @@ public class Subscription extends PagarMeModel<String> {
     private Map<String, Object> metadata;
     @Expose(deserialize = false)
     private Collection<SplitRule> splitRules;
-    @Expose(deserialize = false)
+    @Expose
     @SerializedName("soft_descriptor")
     private String softDescriptor;
 

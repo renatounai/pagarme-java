@@ -7,7 +7,7 @@ import me.pagar.model.Subscription;
 
 public class SubscriptionFactory {
     private final Map<String, Object> METADATA =  new HashMap<String, Object>();
-    private final String SOFTDESCRIPTOR = "some description";
+    private final String SOFTDESCRIPTOR = "soft_test";
 
     public Subscription createCreditCardSubscription(String planId, String cardId, Customer customer){
         Subscription subscription = new Subscription();

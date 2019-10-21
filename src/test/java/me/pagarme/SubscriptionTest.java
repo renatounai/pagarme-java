@@ -100,7 +100,7 @@ public class SubscriptionTest extends BaseTest {
 
         Assert.assertEquals("some_metadata", foundSubscription.getMetadata().keySet().iterator().next());
         Assert.assertEquals("123456", foundSubscription.getMetadata().values().iterator().next());
-        Assert.assertEquals("some description", foundSubscription.getSoftDescriptor());
+        Assert.assertEquals("soft_test", foundSubscription.getSoftDescriptor());
     }
 
     /*

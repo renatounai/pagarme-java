@@ -119,6 +119,10 @@ public class Transaction extends PagarMeModel<Integer> {
     @SerializedName("card_pin_kek")
     private String cardPinKek;
 
+    @Expose(deserialize = false)
+    @SerializedName("local_time")
+    private DateTime localTime;
+
     public String getCardNumber() {
         return cardNumber;
     }
@@ -225,6 +229,15 @@ public class Transaction extends PagarMeModel<Integer> {
     public void setCardPinKek(String cardPinKek) {
         this.cardPinKek = cardPinKek;
         addUnsavedProperty("cardPinKek");
+    }
+
+    public DateTime getLocalTime() {
+        return localTime;
+    }
+
+    public void setLocalTime(DateTime localTime) {
+        this.localTime = localTime;
+        addUnsavedProperty("localTime");
     }
 
     /**

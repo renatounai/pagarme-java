@@ -3,6 +3,7 @@ package me.pagarme;
 
 import java.util.Collection;
 import me.pagar.RecipientStatus;
+import me.pagar.AutoAnticipationType;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,6 +42,9 @@ public class RecipientTest extends BaseTest{
         Assert.assertEquals(recipient.isTransferEnabled(), RecipientFactory.DEFAULT_TRANSFER_ENABLED);
         Assert.assertEquals(recipient.getAutomaticAnticipationEnabled(), RecipientFactory.DEFAULT_AUTOMATIC_ANTICIPATION_ENABLED);
         Assert.assertEquals(recipient.getStatus(), RecipientFactory.DEFAULT_STATUS);
+        Assert.assertEquals(recipient.getAutomaticAnticipationType(), RecipientFactory.DEFAULT_AUTOANTICIPATIONTYPE);
+        Assert.assertEquals(recipient.getAutomaticAnticipationDays(), RecipientFactory.DEFAULT_AUTOANTICIPATIONDAYS);
+        Assert.assertEquals(recipient.getAutomaticAnticipationDelay(), RecipientFactory.DEFAULT_AUTOANTICIPATIONDELAY);
 
         int recipientBankAccountId = recipient.getBankAccount().getId();
         Assert.assertEquals(recipientBankAccountId, bankAccountId);
@@ -118,6 +122,22 @@ public class RecipientTest extends BaseTest{
         recipient = recipient.save(); 
         Assert.assertEquals(recipient.getStatus(), RecipientStatus.INACTIVE);
 
-       }
+        }
+        
+    @Test
+    public void testChangeRecipientAutomaticAnticipationType() throws PagarMeException {
+
+        int bankAccountId = bankAccountFactory.create().save().getId();
+        Recipient recipient = recipientFactory.create();
+        recipient.setBankAccountId(bankAccountId);
+
+        recipient.save();
+        recipient.setAutomaticAnticipationType(AutoAnticipationType.TENTWENTYFIVE);
+        recipient = recipient.save(); 
+        Assert.assertEquals(recipient.getAutomaticAnticipationType(), AutoAnticipationType.TENTWENTYFIVE);
+        recipient.setAutomaticAnticipationType(AutoAnticipationType.FULL);
+        recipient = recipient.save(); 
+        Assert.assertEquals(recipient.getAutomaticAnticipationType(), AutoAnticipationType.FULL);
+        }
 
 }

@@ -18,6 +18,7 @@ import me.pagar.model.BulkAnticipation.Timeframe;
 import me.pagar.util.DateTimeTimestampAdapter;
 import me.pagar.util.JSONUtils;
 import me.pagar.RecipientStatus;
+import me.pagar.AutoAnticipationType;
 
 public class Recipient  extends PagarMeModel<String> {
 
@@ -36,6 +37,18 @@ public class Recipient  extends PagarMeModel<String> {
     @Expose
     @SerializedName(value = "anticipatable_volume_percentage")
     private Integer anticipatableVolumePercentage;
+
+    @Expose
+    @SerializedName(value = "automatic_anticipation_type")
+    private AutoAnticipationType automaticAnticipationType;
+
+    @Expose
+    @SerializedName(value = "automatic_anticipation_days")
+    private String automaticAnticipationDays;
+
+    @Expose
+    @SerializedName(value = "automatic_anticipation_1025_delay")
+    private Integer automaticAnticipationDelay;
 
     @Expose
     @SerializedName(value = "transfer_day")
@@ -67,11 +80,25 @@ public class Recipient  extends PagarMeModel<String> {
     public Boolean isTransferEnabled() {
         return transferEnabled;
     }
+
     public RecipientStatus getStatus() {
         return status;
     }
+
     public Integer getAnticipatableVolumePercentage() {
         return anticipatableVolumePercentage;
+    }
+
+    public AutoAnticipationType getAutomaticAnticipationType() {
+        return automaticAnticipationType;
+    }
+
+    public String getAutomaticAnticipationDays() {
+        return automaticAnticipationDays;
+    }
+
+    public Integer getAutomaticAnticipationDelay() {
+        return automaticAnticipationDelay;
     }
 
     public Integer getTransferDay() {
@@ -101,6 +128,21 @@ public class Recipient  extends PagarMeModel<String> {
     public void setStatus(RecipientStatus status) {
         this.status = status;
         addUnsavedProperty("status");
+    }
+
+    public void setAutomaticAnticipationType(AutoAnticipationType automaticAnticipationType) {
+        this.automaticAnticipationType = automaticAnticipationType;
+        addUnsavedProperty("automaticAnticipationType");
+    }
+
+    public void setAutomaticAnticipationDays(String automaticAnticipationDays) {
+        this.automaticAnticipationDays = automaticAnticipationDays;
+        addUnsavedProperty("automaticAnticipationDays");
+    }
+
+    public void setAutomaticAnticipationDelay(Integer automaticAnticipationDelay) {
+        this.automaticAnticipationDelay = automaticAnticipationDelay;
+        addUnsavedProperty("automaticAnticipationDelay");
     }
 
     public void setAutomaticAnticipationEnabled(Boolean automaticAnticipationEnabled) {
@@ -258,6 +300,9 @@ public class Recipient  extends PagarMeModel<String> {
         this.updatedAt = other.updatedAt;
         this.bankAccount = other.bankAccount;
         this.status = other.status;
+        this.automaticAnticipationType = other.automaticAnticipationType;
+        this.automaticAnticipationDays = other.automaticAnticipationDays;
+        this.automaticAnticipationDelay = other.automaticAnticipationDelay;
     }
 
     public enum TransferInterval {

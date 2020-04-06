@@ -122,7 +122,7 @@ public class RecipientTest extends BaseTest{
         recipient = recipient.save(); 
         Assert.assertEquals(recipient.getStatus(), RecipientStatus.INACTIVE);
 
-        }
+    }
         
     @Test
     public void testChangeRecipientAutomaticAnticipationType() throws PagarMeException {
@@ -138,6 +138,6 @@ public class RecipientTest extends BaseTest{
         recipient.setAutomaticAnticipationType(AutoAnticipationType.FULL);
         recipient = recipient.save(); 
         Assert.assertEquals(recipient.getAutomaticAnticipationType(), AutoAnticipationType.FULL);
-        }
+    }
 
 }

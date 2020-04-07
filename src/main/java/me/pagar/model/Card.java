@@ -56,7 +56,7 @@ public class Card extends PagarMeModel<String> {
 
     @Expose(serialize = false)
     @SerializedName("cvv")
-    private Integer cvv;
+    private String cvv;
 
     @Expose(serialize = false)
     private Customer customer;
@@ -77,11 +77,11 @@ public class Card extends PagarMeModel<String> {
         return lastDigits;
     }
 
-    public Integer getCvv() {
+    public String getCvv() {
         return cvv;
     }
 
-    public void setCvv(Integer cvv) {
+    public void setCvv(String cvv) {
         this.cvv = cvv;
     }
 

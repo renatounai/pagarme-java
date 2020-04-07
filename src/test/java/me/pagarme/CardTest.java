@@ -19,7 +19,7 @@ public class CardTest extends BaseTest {
     private static String HOLDER_NAME = "Pagarme LTDA";
     private static String CARD_NUMBER = "4111111111111111";
     private static String CARD_EXPIRATION_DATE = "092019";
-    private static Integer CARD_CVV = 401;
+    private static String CARD_CVV = "401";
     private static String EXPIRATION_DATE = "1022";
 
     @Test

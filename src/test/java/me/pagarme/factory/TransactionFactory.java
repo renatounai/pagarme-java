@@ -86,7 +86,7 @@ public class TransactionFactory {
         transaction.setPaymentMethod(Transaction.PaymentMethod.CREDIT_CARD);
         transaction.setCardHolderName(card.getHolderName());
         transaction.setCardExpirationDate(card.getExpiresAt());
-        transaction.setCardCvv(Integer.toString(card.getCvv()));
+        transaction.setCardCvv((card.getCvv()));
         transaction.setCardNumber(card.getNumber());
         transaction.setInstallments(INSTALLMENTS);
 
@@ -115,7 +115,7 @@ public class TransactionFactory {
         transaction.setCardHolderName(card.getHolderName());
         transaction.setCardNumber(card.getNumber());
         transaction.setCardExpirationDate(card.getExpiresAt());
-        transaction.setCardCvv(Integer.toString(card.getCvv()));
+        transaction.setCardCvv((card.getCvv()));
         transaction.setBilling(billing);
         transaction.setShipping(shipping);
         transaction.setItems(items);

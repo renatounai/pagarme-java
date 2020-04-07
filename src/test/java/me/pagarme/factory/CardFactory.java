@@ -13,7 +13,7 @@ public class CardFactory {
     public static String CARD_HOLDER_NAME = "Pagarme LTDA";
     public static String CARD_NUMBER = "4111111111111111";
     public static LocalDate date = LocalDate.now().plusYears(1);
-    public static Integer CARD_CVV = 401;
+    public static String CARD_CVV = "401";
 
     public Card create(){
         DateTimeFormatter dtf = DateTimeFormat.forPattern("MMyy");

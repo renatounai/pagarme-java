@@ -1,7 +1,7 @@
 package me.pagar;
 
 public enum CustomerDocumentType {
-	NONE("none"),cpf("cpf"),cnpj("cnpj");
+	NONE("none"),cpf("cpf"),cnpj("cnpj"),passport("passport"),other("other");
 	private String type;
 
 	CustomerDocumentType(String type){

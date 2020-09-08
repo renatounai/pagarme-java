@@ -1,3 +1,5 @@
+Esse fork foi criado para permitir a utilização de multiplas apiKeys no mesmo projeto. Originalmente o campo era static.
+
 Pagar.me Java Library
 ===========================
 [![Build Status](https://travis-ci.org/pagarme/pagarme-java.svg?token=dqgmPH2JHKsHRgaNHZxf&branch=master)](https://travis-ci.org/pagarme/pagarme-java)

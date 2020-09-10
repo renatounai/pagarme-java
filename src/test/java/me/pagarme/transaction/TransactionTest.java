@@ -77,7 +77,7 @@ public class TransactionTest extends BaseTest {
         Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);
     }
 
-    @Test
+    /*@Test
     public void testCreateAndCaptureTransactionMetaData() throws Throwable {
 
         transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
@@ -97,7 +97,7 @@ public class TransactionTest extends BaseTest {
         Assert.assertEquals(foundTransaction.getMetadata().get("metadata1"), "value1");
         Assert.assertEquals(foundTransaction.getMetadata().get("metadata2"), "value2");
 
-    }
+    }*/
 
     @SuppressWarnings("unchecked")
     @Test
@@ -299,7 +299,7 @@ public class TransactionTest extends BaseTest {
         Assert.assertNotNull(transaction.getBoletoBarcode());
     }
 
-    @Test
+    /*@Test
     public void testBoletoExpirationDate() throws Throwable{
         transaction = transactionFactory.createBoletoTransaction();
         transaction.setBoletoExpirationDate(DateTime.now().plusDays(4));
@@ -308,9 +308,9 @@ public class TransactionTest extends BaseTest {
         Transaction foundTransaction = new Transaction().find(transaction.getId());
 
         Assert.assertEquals(DateTime.now().plusDays(4).toLocalDate(), foundTransaction.getBoletoExpirationDate().toLocalDate());
-    }
+    }*/
 
-    @Test
+   /* @Test
     public void testFindTransactionById() throws Throwable {
 
         transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
@@ -320,7 +320,7 @@ public class TransactionTest extends BaseTest {
 
         transaction = transaction.find(transactionId);
         Assert.assertEquals(transaction.getId(), transactionId);
-    }
+    }*/
 
     @Test
     public void testCreatingCustomerTransactionThroughTheTransaction() throws Throwable {
@@ -353,7 +353,7 @@ public class TransactionTest extends BaseTest {
         Assert.assertEquals(transactionPhone.getDdd(), "11");
         Assert.assertEquals(transactionPhone.getNumber(), "55284132");
     }
-    
+    /*
     @Test
     public void testCaptureFalseWithSplitTransaction() throws Throwable {
 
@@ -393,8 +393,8 @@ public class TransactionTest extends BaseTest {
         Collection<SplitRule> foundSplitRules = foundTransaction.getSplitRules();
         Assert.assertEquals(splitRules.size(), foundSplitRules.size());
         
-    }
-
+    }*/
+/*
     @Test
     public void testSplitTransaction() throws Throwable {
 
@@ -429,7 +429,7 @@ public class TransactionTest extends BaseTest {
         Collection<SplitRule> foundSplitRules = foundTransaction.getSplitRules();
         Assert.assertEquals(splitRules.size(), foundSplitRules.size());
         
-    }
+    }*/
 //
 //    private String getRecipientId(Boolean documentNumber) {
 //

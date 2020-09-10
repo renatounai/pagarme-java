@@ -33,10 +33,6 @@ public class PagarMeRequest extends PagarMe {
     @SuppressWarnings("unchecked")
     public <T> T execute() throws PagarMeException {
 
-        if (Strings.isNullOrEmpty(getApiKey())) {
-            throw new PagarMeException("You need to configure API key before performing requests.");
-        }
-
         final RestClient client = new RestClient(method, fullApiUrl(path), parameters, headers);
         final PagarMeResponse response = client.execute();
 

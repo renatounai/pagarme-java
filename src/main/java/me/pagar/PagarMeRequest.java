@@ -21,9 +21,6 @@ public class PagarMeRequest {
     private static final String API_ENDPOINT =  "https://api.pagar.me/1";
     private static final String USER_AGENT = "Mozilla/5.0";
     
-    @SerializedName("api_key")
-    private String apiKey; 
-    
     private String endPoint;
     private String method;
     private List<Map<String,String>> parameters;
@@ -88,22 +85,6 @@ public class PagarMeRequest {
      */
     public String getMethod() {
         return this.method;
-    }
-    
-    /**
-     * 
-     * @param apiKey 
-     */
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    public String getApiKey() {
-        return this.apiKey;
     }
     
     public void setResponseCode(int responseCode) {

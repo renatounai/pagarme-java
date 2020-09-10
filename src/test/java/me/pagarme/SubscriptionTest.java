@@ -149,7 +149,7 @@ public class SubscriptionTest extends BaseTest {
         Assert.assertEquals("http://requestb.in/t5mzh9t5", subscription.getPostbackUrl());
     }
 
-    @Test
+    /*@Test
     public void testSplitSubscriptionPercentage() throws Throwable {
 
         Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(), defaultCard.getId(), defaultCustomer);
@@ -162,8 +162,8 @@ public class SubscriptionTest extends BaseTest {
 
         Collection<SplitRule> foundSplitRules = foundTransaction.getSplitRules();
         Assert.assertEquals(splitRules.size(), foundSplitRules.size());
-    }
-
+    }*/
+/*
     @Test
     public void testSplitSubscriptionAmount() throws Throwable {
 
@@ -177,7 +177,7 @@ public class SubscriptionTest extends BaseTest {
 
         Collection<SplitRule> foundSplitRules = foundTransaction.getSplitRules();
         Assert.assertEquals(splitRules.size(), foundSplitRules.size());
-    }
+    }*/
 
     @Test
     public void testDefaultSettleCharges() throws Throwable {

@@ -18,9 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RestClient {
-
-    public final static String API_KEY = "api_key";
-
     public final static String AMOUNT = "amount";
 
     private HttpsURLConnection httpClient;
@@ -30,10 +27,6 @@ public class RestClient {
     private String url;
 
     private Map<String, Object> parameters;
-
-    private int count;
-
-    private boolean live;
 
     private InputStream is;
 
@@ -75,7 +68,6 @@ public class RestClient {
         this(method, url, parameters, null);
     }
 
-    @SuppressWarnings("unchecked")
     public RestClient(final String method, final String url, Map<String, Object> parameters,
             Map<String, String> headers) throws PagarMeException {
         System.setProperty("https.protocols", "TLSv1.2");

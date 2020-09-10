@@ -20,6 +20,10 @@ import me.pagar.util.JSONUtils;
 
 public class Transaction extends PagarMeModel<Integer> {
 
+	@Expose
+    @SerializedName("api_key")
+    private String apiKey;
+	
     @Expose(deserialize = false)
     private Boolean async;
 
@@ -471,20 +475,12 @@ public class Transaction extends PagarMeModel<Integer> {
         this.customer = customer;
     }
 
-    public Transaction find(String id) throws PagarMeException {
+    public Transaction find(String id, String apiKey) throws PagarMeException {
 
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, String.format("/%s/%s", getClassName(), id));
-
-        final Transaction other = JSONUtils.getAsObject((JsonObject) request.execute(), Transaction.class);
-        copy(other);
-        flush();
-
-        return other;
-    }
-
-    public Transaction find(Integer id) throws PagarMeException {
-
-        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, String.format("/%s/%s", getClassName(), id));
+        if (apiKey != null && !apiKey.isEmpty()) {
+        	request.getParameters().put("api_key", apiKey);
+        }
 
         final Transaction other = JSONUtils.getAsObject((JsonObject) request.execute(), Transaction.class);
         copy(other);
@@ -1139,9 +1135,20 @@ public class Transaction extends PagarMeModel<Integer> {
         flush();
         return other;
     }
+    
+    
 
-    private void copy(Transaction other) {
+    public String getApiKey() {
+		return apiKey;
+	}
+
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+
+	private void copy(Transaction other) {
         super.copy(other);
+        this.apiKey = other.apiKey;
         this.subscriptionId = other.subscriptionId;
         this.amount = other.amount;
         this.installments = other.installments;
